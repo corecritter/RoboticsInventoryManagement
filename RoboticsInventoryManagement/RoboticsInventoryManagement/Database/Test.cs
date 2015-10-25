@@ -9,7 +9,7 @@ namespace RoboticsInventoryManagement.Database
     {
         static void Main(string[] args)
         {
-            using (var db = new BloggingContext())
+            using (var db = new ItemContext())
             {
                 // Create and save a new Blog 
                 Console.Write("Enter a name for a new Blog: ");

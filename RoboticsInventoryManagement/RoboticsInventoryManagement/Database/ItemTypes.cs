@@ -9,7 +9,7 @@ namespace RoboticsInventoryManagement.Database
     {
         public int ItemTypeId { get; set; } //PK
         public string ItemName { get; set; }
-
+        public int Quantity { get; set; }
         public virtual List<Items> Item { get; set; } 
     }
 }
