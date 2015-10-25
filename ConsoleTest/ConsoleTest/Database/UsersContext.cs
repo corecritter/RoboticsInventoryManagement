@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace RoboticsInventoryManagement.Database
+namespace ConsoleTest.Database
 {
     public class UsersContext : DbContext
     {

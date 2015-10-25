@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace RoboticsInventoryManagement.Database
+namespace ConsoleTest.Database
 {
     public class Users
     {
