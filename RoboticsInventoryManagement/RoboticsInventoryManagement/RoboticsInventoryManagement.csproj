@@ -89,6 +89,7 @@
     <Compile Include="Database\ItemContext.cs" />
     <Compile Include="Database\Items.cs" />
     <Compile Include="Database\ItemTypes.cs" />
+    <Compile Include="Database\School.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
