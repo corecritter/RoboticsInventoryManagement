@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 
@@ -7,6 +8,7 @@ namespace ConsoleTest.Database
 {
     public class Items
     {
+        [Key]
         public int ItemId { get; set; }
         public int ItemTypeId { get; set; }
         public int InventoryLocationId { get; set; }
