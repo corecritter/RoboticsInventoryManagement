@@ -13,5 +13,6 @@ namespace RoboticsInventoryManagement.Database
 
         public virtual ItemTypes ItemType { get; set; }
         public virtual InventoryLocations InventoryLocation { get; set; }
+        public virtual Schools School{ get; set; }
     }
 }

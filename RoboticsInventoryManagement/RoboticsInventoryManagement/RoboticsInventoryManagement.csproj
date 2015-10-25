@@ -86,9 +86,11 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Database\InventoryLocations.cs" />
     <Compile Include="Database\ItemContext.cs" />
     <Compile Include="Database\Items.cs" />
     <Compile Include="Database\ItemTypes.cs" />
+    <Compile Include="Database\Schools.cs" />
     <Compile Include="Database\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
