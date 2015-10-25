@@ -9,6 +9,6 @@ namespace RoboticsInventoryManagement.Database
     public class ItemContext : DbContext
     {
         public DbSet<ItemTypes> ItemTypes { get; set; }  //Entity Of Item Types
-        public DbSet<Items> Items{ get; set; }        //Entity Of Items
+        public DbSet<Items> Items{ get; set; }           //Entity Of Items
     }
 }
