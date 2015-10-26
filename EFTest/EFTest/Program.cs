@@ -1,11 +1,10 @@
-﻿using ConsoleTest.Database;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-namespace ConsoleTest
+using EFTest.Database;
+namespace EFTest
 {
     class Program
     {
@@ -57,23 +56,28 @@ namespace ConsoleTest
                 Console.Write("Enter a name for a new Item Type: ");
                 var itemName = Console.ReadLine();
                 Console.Write("Enter Item Quantity: ");
-                var newItemType = new ItemTypes { ItemName = itemName };
+                var qty = int.Parse(Console.ReadLine());
+                var newItemType = new ItemTypes { ItemName = itemName, Quantity = qty };
                 db.ItemTypes.Add(newItemType);
                 db.SaveChanges();
 
+                for(int i=0; i < qty; i++)
+                {
+                    var newItem = new Items { ItemTypeId = newItemType.ItemTypeId };
+                    db.Items.Add(newItem);
+                    db.SaveChanges();
+                }
+                
                 // Display all Blogs from the database 
                 var query = from b in db.ItemTypes
                             orderby b.ItemName
-                            select b;
+                            select b.ItemName + b.Quantity;
 
-                Console.WriteLine("All blogs in the database:");
+                Console.WriteLine("All Item Types in the database:");
                 foreach (var item in query)
                 {
-                    Console.WriteLine(item.ItemName);
+                    Console.WriteLine(item);
                 }
-
-                Console.WriteLine("Press any key to exit...");
-                Console.ReadKey();
             }
         }
     }

@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 
-namespace ConsoleTest.Database
+namespace EFTest.Database
 {
     public class UsersContext : DbContext
     {
