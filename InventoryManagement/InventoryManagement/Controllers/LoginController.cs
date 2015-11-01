@@ -11,9 +11,18 @@ namespace InventoryManagement.Controllers
     {
         // GET: Login
         UsersContext _db = new UsersContext();
-        public ActionResult Login()
+        public ActionResult Index()
         {
             return View();
+        }
+        public ActionResult Login(string userName, string password)
+        {
+                //ViewBag.ReturnUrl = returnUrl;
+                if (!userName.Equals(""))
+                    return View("Test");
+                else {
+                    return null;
+                }
         }
     }
 }

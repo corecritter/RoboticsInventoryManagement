@@ -186,7 +186,6 @@
     <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Database\InventoryContext.cs" />
     <Compile Include="Database\InventoryLocations.cs" />
     <Compile Include="Database\ItemContext.cs" />
@@ -264,11 +263,8 @@
     <Content Include="Views\Labels\Details.cshtml" />
     <Content Include="Views\Labels\Edit.cshtml" />
     <Content Include="Views\Labels\Index.cshtml" />
-    <Content Include="Views\Schools\Create.cshtml" />
-    <Content Include="Views\Schools\Delete.cshtml" />
-    <Content Include="Views\Schools\Details.cshtml" />
-    <Content Include="Views\Schools\Edit.cshtml" />
-    <Content Include="Views\Schools\Index.cshtml" />
+    <Content Include="Views\Login\Test.cshtml" />
+    <Content Include="Views\Login\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
