@@ -1,0 +1,31 @@
+﻿@model InventoryManagement.Database.Users
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>Login</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        <fieldset>
+            <legend>Account Information</legend>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.UserName)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.UserName)
+            </div>
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Password)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Password)
+            </div>
+            <p>
+                <input type="submit" value="Log On" />..@Html.ActionLink("Register", "Create") if you don't have an account.
+            </p>
+        </fieldset>
+    </div>
+}

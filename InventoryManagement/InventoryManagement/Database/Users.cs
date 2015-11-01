@@ -8,13 +8,19 @@ namespace InventoryManagement.Database
 {
     public class Users
     {
+        //[Key]
+        //public int UserId { get; set; } //PK
         [Key]
-        public int user_id { get; set; } //PK
-        public string fName { get; set; }
-        public string lName { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
-        public int phoneNumber { get; set; }
+        [Required(ErrorMessage = "User Name is Required and must be unique")]
+        public string UserName { get; set; }
+
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string Email { get; set; }
+        [Required(ErrorMessage ="A Password is required")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+        public int PhoneNumber { get; set; }
         public bool isAdmin { get; set; }
     }
 }

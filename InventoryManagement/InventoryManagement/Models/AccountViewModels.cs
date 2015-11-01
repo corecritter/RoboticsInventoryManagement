@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿/*
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace InventoryManagement.Models
@@ -110,3 +111,4 @@ namespace InventoryManagement.Models
         public string Email { get; set; }
     }
 }
+*/
