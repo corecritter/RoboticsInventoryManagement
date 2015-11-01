@@ -24,7 +24,10 @@
                 @Html.EditorFor(model => model.Password)
             </div>
             <p>
-                <input type="submit" value="Log On" />..@Html.ActionLink("Register", "Create") if you don't have an account.
+                <input type="submit" value="Log On" />
+            </p>
+            <p>
+                @Html.ActionLink("Register", "Create") if you don't have an account.
             </p>
         </fieldset>
     </div>
