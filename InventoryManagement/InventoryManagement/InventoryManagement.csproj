@@ -181,13 +181,18 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventoryLocationsController.cs" />
     <Compile Include="Controllers\ItemTypesController.cs" />
+    <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Database\InventoryContext.cs" />
     <Compile Include="Database\InventoryLocations.cs" />
     <Compile Include="Database\ItemContext.cs" />
     <Compile Include="Database\Items.cs" />
     <Compile Include="Database\ItemTypes.cs" />
+    <Compile Include="Database\LabelContext.cs" />
+    <Compile Include="Database\Labels.cs" />
     <Compile Include="Database\Schools.cs" />
     <Compile Include="Database\Users.cs" />
     <Compile Include="Database\UsersContext.cs" />
@@ -209,6 +214,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\background.jpg" />
+    <Content Include="Images\logo.png" />
+    <Content Include="Images\WShsIJl.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -244,6 +252,16 @@
     <Content Include="Views\Shared\_HomeLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
+    <Content Include="Views\InventoryLocations\Create.cshtml" />
+    <Content Include="Views\InventoryLocations\Delete.cshtml" />
+    <Content Include="Views\InventoryLocations\Details.cshtml" />
+    <Content Include="Views\InventoryLocations\Edit.cshtml" />
+    <Content Include="Views\InventoryLocations\Index.cshtml" />
+    <Content Include="Views\Labels\Create.cshtml" />
+    <Content Include="Views\Labels\Delete.cshtml" />
+    <Content Include="Views\Labels\Details.cshtml" />
+    <Content Include="Views\Labels\Edit.cshtml" />
+    <Content Include="Views\Labels\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
