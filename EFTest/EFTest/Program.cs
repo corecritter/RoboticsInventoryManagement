@@ -14,6 +14,7 @@ namespace EFTest
             {
                 Console.WriteLine("1 = Add Inventory Location");
                 Console.WriteLine("2 = Add Item Type");
+                Console.WriteLine("3 = Display Item Types");
                 var selection = Console.ReadLine();
                 int sel = int.Parse(selection);
                 if (sel == 1)
@@ -24,6 +25,8 @@ namespace EFTest
                 {
                     addItemType();
                 }
+                else if (sel == 3)
+                    printItemTypes();
                 else
                     break;
             }
@@ -68,15 +71,23 @@ namespace EFTest
                     db.SaveChanges();
                 }
                 
-                // Display all Blogs from the database 
+                
+                printItemTypes();
+                
+            }
+        }
+        public static void printItemTypes()
+        {
+            using (var db = new ItemContext())
+            {
+                // Display all Item types from the database 
                 var query = from b in db.ItemTypes
                             orderby b.ItemName
-                            select b.ItemName + b.Quantity;
-
+                            select b;//b.ItemName + b.Quantity;
                 Console.WriteLine("All Item Types in the database:");
                 foreach (var item in query)
                 {
-                    Console.WriteLine(item);
+                    Console.WriteLine("Name: " + item.ItemName + " Quantity: "  + item.Quantity);
                 }
             }
         }
