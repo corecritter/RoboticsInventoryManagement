@@ -169,8 +169,10 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InventoryLocationsController.cs" />
     <Compile Include="Controllers\ItemTypesController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Database\InventoryContext.cs" />
     <Compile Include="Database\InventoryLocations.cs" />
     <Compile Include="Database\ItemContext.cs" />
     <Compile Include="Database\Items.cs" />
@@ -232,6 +234,11 @@
     <Content Include="Views\ItemTypes\Index.cshtml" />
     <Content Include="Views\Shared\_HomeLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\InventoryLocations\Create.cshtml" />
+    <Content Include="Views\InventoryLocations\Delete.cshtml" />
+    <Content Include="Views\InventoryLocations\Details.cshtml" />
+    <Content Include="Views\InventoryLocations\Edit.cshtml" />
+    <Content Include="Views\InventoryLocations\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
