@@ -17,12 +17,20 @@ namespace InventoryManagement
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 //defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+<<<<<<< HEAD
 
                 //defaults: new { controller = "Index", action = "Login", id = UrlParameter.Optional }
                 defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
 
                 //defaults: new { controller = "Login", action = "Login", id = UrlParameter.Optional }
             // defaults: new { controller = "ItemTypes", action = "Index", id = UrlParameter.Optional }
+=======
+                //defaults: new { controller = "Index", action = "Login", id = UrlParameter.Optional }
+                defaults: new { controller = "Login", action = "Index", id = UrlParameter.Optional }
+                //defaults: new { controller = "Login", action = "Login", id = UrlParameter.Optional }
+                // defaults: new { controller = "ItemTypes", action = "Index", id = UrlParameter.Optional }
+                //defaults: new { controller = "Schools", action = "Index", id = UrlParameter.Optional }
+>>>>>>> origin/master
             );
         }
     }
