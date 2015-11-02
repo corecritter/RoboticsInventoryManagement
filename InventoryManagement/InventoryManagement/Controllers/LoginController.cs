@@ -17,12 +17,20 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult Login(string userName, string password)
         {
+            if (userName == null) { }
+
+            else
+            {
                 //ViewBag.ReturnUrl = returnUrl;
                 if (!userName.Equals(""))
                     return View("Test");
-                else {
+                else
+                {
                     return null;
                 }
+                return null;
+            }
+            return View("Login");
         }
     }
 }
