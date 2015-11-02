@@ -52,6 +52,17 @@ namespace InventoryManagement.Controllers
             {
                 db.ItemTypes.Add(itemTypes);
                 db.SaveChanges();
+                for (int i= 0; i < itemTypes.Quantity; i++)
+                {
+                    var newItem = new Items { ItemTypeId = itemTypes.ItemTypeId };
+                    db.Items.Add(newItem);
+                    db.SaveChanges();
+                }
+                IQueryable < InventoryManagement.Database.Items > query =  from item in db.Items
+                            where item.ItemTypeId == itemTypes.ItemTypeId
+                            select item;
+
+                //return View(query.ToList());
                 return RedirectToAction("Index");
             }
 
