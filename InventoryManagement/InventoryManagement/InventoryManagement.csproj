@@ -256,7 +256,6 @@
     <Content Include="Views\ItemTypes\Index.cshtml" />
     <Content Include="Views\Shared\_HomeLayout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\InventoryLocations\Create.cshtml" />
     <Content Include="Views\InventoryLocations\Delete.cshtml" />
     <Content Include="Views\InventoryLocations\Details.cshtml" />
@@ -279,6 +278,7 @@
     <Content Include="Views\Users\Details.cshtml" />
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
+    <Content Include="Views\Login\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

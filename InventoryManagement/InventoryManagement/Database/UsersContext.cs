@@ -8,6 +8,10 @@ namespace InventoryManagement.Database
 {
     public class UsersContext : DbContext
     {
+        public UsersContext() : base("InventoryDatabase")
+        {
+
+        }
         public DbSet<Users> Users { get; set; } //Entity for users
     }
 }

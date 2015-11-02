@@ -10,6 +10,6 @@ namespace InventoryManagement.Database
     {
         public DbSet<InventoryLocations> InventoryLocations { get; set; }
 
-        public System.Data.Entity.DbSet<InventoryManagement.Database.Schools> Schools { get; set; }
+        public DbSet<InventoryManagement.Database.Schools> Schools { get; set; }
     }
 }

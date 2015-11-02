@@ -15,22 +15,60 @@ namespace InventoryManagement.Controllers
         {
             return View();
         }
-        public ActionResult Login(string userName, string password)
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult Login(Users use)
         {
-            if (userName == null) { }
-
-            else
+            using (UsersContext db = new UsersContext())
             {
-                //ViewBag.ReturnUrl = returnUrl;
-                if (!userName.Equals(""))
-                    return View("Test");
-                else
+                //IQueryable<db.Users> query;
+                var user = db.Users.FirstOrDefault(u => u.UserName == use.UserName && u.Password == use.Password);
+                
+                if (user != null) //Valid credentials 
                 {
-                    return null;
+                    Session["LoggedUserID"] = user.UserName;
+                    Session["isAdmin"] = user.isAdmin;
                 }
-                return null;
+                else //Login UserName/PassWord doesn't exist
+                {
+                    ModelState.AddModelError("", "Invalid login attempt.");
+                    return View(use);
+                    //return View(use);
+                    //return View("Test");
+                }
+                return AfterLogin();
+                
             }
-            return View("Login");
         }
+        public ActionResult AfterLogin()
+        {
+            if (Session["LoggedUserId"] != null && (bool)Session["isAdmin"])
+            {
+                return RedirectToAction("Index", "ItemTypes");
+            }
+            else if (Session["LoggedUserId"] != null)
+            {
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+        //public ActionResult Login(string userName, string password)
+        //{
+        //    using(UsersContext db = new UsersContext())
+        //    {
+        //        //IQueryable<db.Users> query;
+        //        var user = db.Users.FirstOrDefault(u => u.UserName == userName && u.Password == password);
+        //        if (user == null) //Login UserName/PassWord doesn't exist
+        //        {
+        //            return null;
+        //        }
+        //        else //Valid credentials
+        //        {
+        //            Session["LogedUserID"] = user.UserName;
+        //            Session["isAdmin"] = user.isAdmin;
+        //            return View("Test");
+        //        }
+        //    }
+        //}
     }
 }
