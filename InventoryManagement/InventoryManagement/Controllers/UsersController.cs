@@ -8,7 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using InventoryManagement.Database;
 
-namespace InventoryManagement.Views
+namespace InventoryManagement.Controllers
 {
     public class UsersController : Controller
     {
@@ -21,7 +21,7 @@ namespace InventoryManagement.Views
         }
 
         // GET: Users/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(string id)
         {
             if (id == null)
             {
@@ -46,7 +46,7 @@ namespace InventoryManagement.Views
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "user_id,fName,lName,email,password,phoneNumber,isAdmin")] Users users)
+        public ActionResult Create([Bind(Include = "UserName,FirstName,LastName,Email,Password,PhoneNumber,isAdmin")] Users users)
         {
             if (ModelState.IsValid)
             {
@@ -59,7 +59,7 @@ namespace InventoryManagement.Views
         }
 
         // GET: Users/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(string id)
         {
             if (id == null)
             {
@@ -78,7 +78,7 @@ namespace InventoryManagement.Views
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "user_id,fName,lName,email,password,phoneNumber,isAdmin")] Users users)
+        public ActionResult Edit([Bind(Include = "UserName,FirstName,LastName,Email,Password,PhoneNumber,isAdmin")] Users users)
         {
             if (ModelState.IsValid)
             {
@@ -90,7 +90,7 @@ namespace InventoryManagement.Views
         }
 
         // GET: Users/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(string id)
         {
             if (id == null)
             {
@@ -107,7 +107,7 @@ namespace InventoryManagement.Views
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult DeleteConfirmed(string id)
         {
             Users users = db.Users.Find(id);
             db.Users.Remove(users);
