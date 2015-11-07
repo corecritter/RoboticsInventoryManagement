@@ -13,8 +13,8 @@ namespace InventoryManagement.Database
         public DbSet<Items> Items{ get; set; }           //Entity Of Items
         public DbSet<InventoryLocations> InventoryLocations {get; set;}
 
-        public System.Data.Entity.DbSet<InventoryManagement.Database.Labels> Labels { get; set; }
+        public DbSet<InventoryManagement.Database.Labels> Labels { get; set; }
 
-        public System.Data.Entity.DbSet<InventoryManagement.Database.Schools> Schools { get; set; }
+        public DbSet<InventoryManagement.Database.Schools> Schools { get; set; }
     }
 }

@@ -183,6 +183,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryLocationsController.cs" />
     <Compile Include="Controllers\ItemTypesController.cs" />
+    <Compile Include="Controllers\ItemTypesViewModel.cs" />
     <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />

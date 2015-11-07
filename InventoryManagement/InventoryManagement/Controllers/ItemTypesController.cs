@@ -32,9 +32,23 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
+            IQueryable<Items> query  = from item in db.Items
+                        where item.ItemTypeId == itemTypes.ItemTypeId
+                        select item;
+            Items items = db.Items.Find(id);
+            ViewBag.Items = items;
+            //ViewData["Items"] = query.ToList<Items>();// query;
+            //return View(context.Players.Include(player => player.Team).ToList());
+            var itemTypeModel = itemTypes;
+            var itemModel = items;
+           
             return View(itemTypes);
         }
+        public ActionResult test()
+        {
 
+            return PartialView();
+        }
         // GET: ItemTypes/Create
         public ActionResult Create()
         {
@@ -81,7 +95,32 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
-            return View(itemTypes);
+            //ViewBag.Items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
+            var items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
+            var itemTypeModel = itemTypes;
+            var itemModel = items.ToList<Items>();
+
+            var inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
+            {
+                Text = x.InventoryLocationName,
+                Value = x.InventoryLocationId.ToString()
+            }).ToList();
+            var labels = db.Labels.Select(x => new SelectListItem
+            {
+                Text = x.LabelName,
+                Value = x.LabelId.ToString()
+            }).ToList();
+
+            ItemTypesViewModel vm = new ItemTypesViewModel
+            {
+                ItemTypeModel = itemTypeModel,
+                ItemsModel = itemModel,
+                InventoryLocations = inventoryLocations,
+                selectedValue = "0",
+                Labels = labels,
+                selectedLabel = "0"
+            };
+            return View(vm);
         }
 
         // POST: ItemTypes/Edit/5
