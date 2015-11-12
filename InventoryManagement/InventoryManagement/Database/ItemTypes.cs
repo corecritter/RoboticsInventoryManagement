@@ -8,10 +8,6 @@ namespace InventoryManagement.Database
 {
     public class ItemTypes
     {
-        public ItemTypes()
-        {
-            this.Item = new List<Items>();
-        }
         [Key]
         public int ItemTypeId { get; set; } //PK
         public string ItemName { get; set; }

@@ -96,21 +96,22 @@ namespace InventoryManagement.Controllers
                 return HttpNotFound();
             }
             //ViewBag.Items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
-            var items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
             var itemTypeModel = itemTypes;
-            var itemModel = items.ToList<Items>();
+            var items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
+            var itemModel = items.ToList();
 
             var inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
                 Text = x.InventoryLocationName,
                 Value = x.InventoryLocationId.ToString()
             }).ToList();
+            inventoryLocations.Add(new SelectListItem { Text = "", Value = null });
             var labels = db.Labels.Select(x => new SelectListItem
             {
                 Text = x.LabelName,
                 Value = x.LabelId.ToString()
             }).ToList();
-
+            
             ItemTypesViewModel vm = new ItemTypesViewModel
             {
                 ItemTypeModel = itemTypeModel,
@@ -126,18 +127,49 @@ namespace InventoryManagement.Controllers
         // POST: ItemTypes/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public ActionResult Edit([Bind(Include = "ItemTypeId,ItemName,Quantity")] ItemTypes itemTypes)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        db.Entry(itemTypes).State = EntityState.Modified;
+        //        db.SaveChanges();
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(itemTypes);
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ItemTypeId,ItemName,Quantity")] ItemTypes itemTypes)
+        //public ActionResult Edit(ItemTypes itemTypes, IEnumerable<Items> items)
+        public ActionResult Edit(ItemTypesViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(itemTypes).State = EntityState.Modified;
+                db.Entry(viewModel.ItemTypeModel).State = EntityState.Modified;
                 db.SaveChanges();
+
+                //for(int i = 0; i<viewModel.ItemsModel.Count; i++)
+                //{
+                //    //db.Entry(((Items)viewModel.ItemsModel[i])).State = EntityState.Modified;
+                //    //db.Entry(viewModel.ItemsModel[i]).State = EntityState.Modified;
+                //    //var item = db.Items.First(x => x.ItemId == viewModel.ItemsModel[i].ItemId);
+                //    //db.Items.Attach(viewModel.ItemsModel[i]);
+                //    db.Entry(((Items)viewModel.ItemsModel[i])).State = EntityState.Modified;
+                //    db.SaveChanges();
+                //    string s = "";                    
+                //}
+
+
+                //db.SaveChanges();
                 return RedirectToAction("Index");
+                
             }
-            return View(itemTypes);
+            //return View(vm);
+            return null;
         }
+
 
         // GET: ItemTypes/Delete/5
         public ActionResult Delete(int? id)

@@ -33,23 +33,34 @@
         </div>
 
         <div class="form-group">
-            @foreach (InventoryManagement.Database.Items item in Model.ItemsModel)
+            
+            @for (int i = 0; i < Model.ItemTypeModel.Item.Count(); i++)
             {
-                @Html.LabelFor(model => item.ItemId) 
-                @Html.DropDownListFor(selIndex => selIndex.selectedValue, Model.InventoryLocations)
-                @Html.DropDownListFor(selIndex => selIndex.selectedLabel, Model.Labels)
+                @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemTypeId)
+                @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemId)
+                @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations)
+
+
+            }
+
+            @* for (int i = 0; i < Model.ItemsModel.Count(); i++)
+    {
+                @Html.HiddenFor(item => Model.ItemsModel[i].ItemId)
+            @Html.DropDownListFor(InventoryLocationId => Model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations)
+            @Html.DropDownListFor(LabelId => Model.ItemsModel[i].LabelId, Model.Labels)
+                < br />
+            }*@
+            
+
+            <!--
+            Html.EditorFor(model => model.ItemsModel)
+            {
+                Html.DropDownListFor(selIndex => selIndex.selectedValue, Model.InventoryLocations)
+                Html.DropDownListFor(selIndex => selIndex.selectedLabel, Model.Labels)
                 <br />
             }
+                -->
         </div>
-
-
-
-        
-
-
-
-
-
 
 
             <div class="form-group">

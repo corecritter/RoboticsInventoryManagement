@@ -5,6 +5,7 @@ using System.Web;
 using InventoryManagement.Database;
 using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Entity;
 
 namespace InventoryManagement.Controllers
 {
@@ -12,7 +13,8 @@ namespace InventoryManagement.Controllers
     {
         public ItemTypes ItemTypeModel { get; set; }
         //public Items ItemModel { get; set; }
-        public List<Items> ItemsModel { get; set; }
+        public IList<Items> ItemsModel { get; set; }
+        //public Items ItemsModel{ get; set; }
         [Display(Name = "Inventory Locations")]
         public IEnumerable<SelectListItem> InventoryLocations { get; set; }
         public string selectedValue { get; set; }
