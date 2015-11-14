@@ -17,9 +17,11 @@ namespace InventoryManagement.Controllers
         //public Items ItemsModel{ get; set; }
         [Display(Name = "Inventory Locations")]
         public IEnumerable<SelectListItem> InventoryLocations { get; set; }
-        public string selectedValue { get; set; }
+        //public SelectList InventoryLocations { get; set; }
+        public IList<string> selectedValue { get; set; }
 
+        [Display(Name = "Inventory Locations")]
         public IEnumerable<SelectListItem> Labels { get; set; }
-        public string selectedLabel { get; set; }
+        public IList<string> selectedLabel { get; set; }
     }
 }

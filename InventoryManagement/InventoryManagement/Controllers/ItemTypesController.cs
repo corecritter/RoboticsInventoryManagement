@@ -100,27 +100,32 @@ namespace InventoryManagement.Controllers
             var itemTypeModel = itemTypes;
             var items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
             var itemModel = items.ToList();
+            IList<string> selectedLocations;
+            //foreach(var item in items)
+            //
+
+            //
 
             var inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
                 Text = x.InventoryLocationName,
                 Value = x.InventoryLocationId.ToString()
             }).ToList();
-            inventoryLocations.Add(new SelectListItem { Text = "", Value = null });
+            //inventoryLocations.Add(new SelectListItem { Text = "", Value = null });
             var labels = db.Labels.Select(x => new SelectListItem
             {
                 Text = x.LabelName,
                 Value = x.LabelId.ToString()
             }).ToList();
-            
+
             ItemTypesViewModel vm = new ItemTypesViewModel
             {
                 ItemTypeModel = itemTypeModel,
                 ItemsModel = itemModel,
-                InventoryLocations = inventoryLocations,
-                selectedValue = "0",
-                Labels = labels,
-                selectedLabel = "0"
+                InventoryLocations = inventoryLocations,// new SelectList(inventoryLocations, 
+                //selectedValue = ,
+                Labels = labels
+                //,selectedLabel = "0"
             };
             return View(vm);
         }
@@ -143,7 +148,6 @@ namespace InventoryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        //public ActionResult Edit(ItemTypes itemTypes, IEnumerable<Items> items)
         public ActionResult Edit(ItemTypesViewModel viewModel)
         {
             if (ModelState.IsValid)
@@ -157,7 +161,6 @@ namespace InventoryManagement.Controllers
                         db.SaveChanges();
                     }
                 return RedirectToAction("Index");
-                
             }
             return null;
         }
@@ -187,10 +190,25 @@ namespace InventoryManagement.Controllers
             int itemTypeId = item.ItemTypeId;
             db.Items.Remove(item);
             db.SaveChanges();
-            //return RedirectToAction("Edit",itemTypeId);
             return RedirectToAction("Edit", new RouteValueDictionary(new { action = "Edit", id = itemTypeId}));
-            //return View(Edit(itemTypeId));
         }
+        public ActionResult AddItem(int? itemTypeId)
+        {
+            if (itemTypeId == null)
+            {
+                return HttpNotFound();
+            }
+            ItemTypes itemType = db.ItemTypes.Find(itemTypeId);
+            if(itemType != null)
+            {
+                var newItem = new Items { ItemTypeId = (int)itemTypeId};
+                db.Items.Add(newItem);
+                db.SaveChanges();
+            }
+            return RedirectToAction("Edit", new RouteValueDictionary(new { action = "Edit", id = itemTypeId }));
+        }
+
+
 
         // POST: ItemTypes/Delete/5
         [HttpPost, ActionName("Delete")]

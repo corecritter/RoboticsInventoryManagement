@@ -10,7 +10,9 @@ namespace InventoryManagement.Database
     {
         [Key]
         public int ItemTypeId { get; set; } //PK
+        [Required]
         public string ItemName { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity must be at least 0.")]
         public int Quantity { get; set; }
         public virtual List<Items> Item { get; set; } 
     }
