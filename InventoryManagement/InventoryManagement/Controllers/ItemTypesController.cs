@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using InventoryManagement.Database;
+using System.Web.Routing;
 
 namespace InventoryManagement.Controllers
 {
@@ -149,24 +150,15 @@ namespace InventoryManagement.Controllers
             {
                 db.Entry(viewModel.ItemTypeModel).State = EntityState.Modified;
                 db.SaveChanges();
-
-                //for(int i = 0; i<viewModel.ItemsModel.Count; i++)
-                //{
-                //    //db.Entry(((Items)viewModel.ItemsModel[i])).State = EntityState.Modified;
-                //    //db.Entry(viewModel.ItemsModel[i]).State = EntityState.Modified;
-                //    //var item = db.Items.First(x => x.ItemId == viewModel.ItemsModel[i].ItemId);
-                //    //db.Items.Attach(viewModel.ItemsModel[i]);
-                //    db.Entry(((Items)viewModel.ItemsModel[i])).State = EntityState.Modified;
-                //    db.SaveChanges();
-                //    string s = "";                    
-                //}
-
-
-                //db.SaveChanges();
+                if (viewModel.ItemTypeModel.Item != null)
+                    for(int i = 0; i<viewModel.ItemTypeModel.Item.Count; i++)
+                    {
+                        db.Entry((viewModel.ItemTypeModel.Item[i])).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
                 return RedirectToAction("Index");
                 
             }
-            //return View(vm);
             return null;
         }
 
@@ -184,6 +176,20 @@ namespace InventoryManagement.Controllers
                 return HttpNotFound();
             }
             return View(itemTypes);
+        }
+        public ActionResult DeleteItem(int? itemId)
+        {
+            if (itemId == null)
+            {
+                return HttpNotFound();
+            }
+            Items item = db.Items.Find(itemId);
+            int itemTypeId = item.ItemTypeId;
+            db.Items.Remove(item);
+            db.SaveChanges();
+            //return RedirectToAction("Edit",itemTypeId);
+            return RedirectToAction("Edit", new RouteValueDictionary(new { action = "Edit", id = itemTypeId}));
+            //return View(Edit(itemTypeId));
         }
 
         // POST: ItemTypes/Delete/5
