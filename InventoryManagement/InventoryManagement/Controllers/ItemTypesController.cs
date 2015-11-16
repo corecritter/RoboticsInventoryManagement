@@ -76,11 +76,8 @@ namespace InventoryManagement.Controllers
                 IQueryable < InventoryManagement.Database.Items > query =  from item in db.Items
                             where item.ItemTypeId == itemTypes.ItemTypeId
                             select item;
-
-                //return View(query.ToList());
                 return RedirectToAction("Index");
             }
-
             return View(itemTypes);
         }
 
@@ -91,41 +88,73 @@ namespace InventoryManagement.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            //Find the Item Type
             ItemTypes itemTypes = db.ItemTypes.Find(id);
             if (itemTypes == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.Items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
             var itemTypeModel = itemTypes;
-            var items = db.Items.Where(Items => Items.ItemTypeId == itemTypes.ItemTypeId);
-            var itemModel = items.ToList();
-            IList<string> selectedLocations;
-            //foreach(var item in items)
-            //
-
-            //
-
-            var inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
+            //Create List of Inventory Locations
+            IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
                 Text = x.InventoryLocationName,
                 Value = x.InventoryLocationId.ToString()
             }).ToList();
-            //inventoryLocations.Add(new SelectListItem { Text = "", Value = null });
-            var labels = db.Labels.Select(x => new SelectListItem
+            //Create List of Labels 
+            IList<SelectListItem> labels = db.Labels.Select(x => new SelectListItem
             {
                 Text = x.LabelName,
                 Value = x.LabelId.ToString()
             }).ToList();
+            //Insert Empty value for no location
+            inventoryLocations.Insert(0, new SelectListItem { Text = "", Value = null });
+            labels.Insert(0, new SelectListItem { Text = "", Value = null });
+            //Create List of Lists of SelectListItems (1 for every Item)
+            IList<IEnumerable<SelectListItem>> invLocSelectLists = new List<IEnumerable<SelectListItem>>();
+            IList<IEnumerable<SelectListItem>> labelSelectLists = new List<IEnumerable<SelectListItem>>();
+            for (int i= 0; i < itemTypeModel.Item.Count; i++)
+            {
+                var currId = itemTypeModel.Item[i].InventoryLocationId;         //Current Id
+                IList<SelectListItem> currList = new List<SelectListItem>();    //Create Copy of list
+                foreach (var item in inventoryLocations)
+                    currList.Add(new SelectListItem {Text= item.Text, Value = item.Value });
+                var currLabelId = itemTypeModel.Item[i].LabelId;
+                IList<SelectListItem> currLabelList = new List<SelectListItem>();    //Create Copy of list
+                foreach (var item in labels)
+                    currLabelList.Add(new SelectListItem { Text = item.Text, Value = item.Value });
+
+
+                //Find the index to be selected
+                if (currId == null) 
+                    currList[0].Selected = true;
+                else
+                    for (int j = 0; j < currList.Count; j++)
+                        if (currId.ToString().Equals(currList[j].Value))
+                        {
+                            currList[j].Selected = true;
+                            break;
+                        }
+                if(currLabelId == null)
+                    currLabelList[0].Selected = true;
+                else
+                    for (int j = 0; j < currLabelList.Count; j++)
+                        if (currLabelId.ToString().Equals(currLabelList[j].Value))
+                        {
+                            currLabelList[j].Selected = true;
+                            break;
+                        }
+
+                invLocSelectLists.Add(currList); //Add to the collection
+                labelSelectLists.Add(currLabelList);
+            }
+
 
             ItemTypesViewModel vm = new ItemTypesViewModel
             {
                 ItemTypeModel = itemTypeModel,
-                ItemsModel = itemModel,
-                InventoryLocations = inventoryLocations,// new SelectList(inventoryLocations, 
-                //selectedValue = ,
-                Labels = labels
-                //,selectedLabel = "0"
+                InventoryLocations = invLocSelectLists,
+                Labels = labelSelectLists
             };
             return View(vm);
         }

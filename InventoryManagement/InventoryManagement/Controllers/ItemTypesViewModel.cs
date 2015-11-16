@@ -12,16 +12,11 @@ namespace InventoryManagement.Controllers
     public class ItemTypesViewModel
     {
         public ItemTypes ItemTypeModel { get; set; }
-        //public Items ItemModel { get; set; }
-        public IList<Items> ItemsModel { get; set; }
-        //public Items ItemsModel{ get; set; }
-        [Display(Name = "Inventory Locations")]
-        public IEnumerable<SelectListItem> InventoryLocations { get; set; }
-        //public SelectList InventoryLocations { get; set; }
-        public IList<string> selectedValue { get; set; }
 
         [Display(Name = "Inventory Locations")]
-        public IEnumerable<SelectListItem> Labels { get; set; }
-        public IList<string> selectedLabel { get; set; }
+        public  IList<IEnumerable<SelectListItem>> InventoryLocations{ get; set; }
+
+        [Display(Name = "Labels")]
+        public IList<IEnumerable<SelectListItem>> Labels { get; set; }
     }
 }

@@ -39,8 +39,8 @@
                 @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemTypeId)
                 @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemId)
                 @Html.HiddenFor(model => model.ItemTypeModel.Item[i].SchoolId)
-                @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations))
-                @Html.DropDownListFor(LabelId => Model.ItemsModel[i].LabelId, Model.Labels)
+                @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations[i])
+                @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].LabelId, Model.Labels[i])
                 @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemTypeModel.Item[i].ItemId })
                 <br />
             }
