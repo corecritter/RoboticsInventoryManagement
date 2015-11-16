@@ -18,7 +18,9 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes
         public ActionResult Index()
         {
-            return View(db.ItemTypes.ToList());
+            if(Session["isAdmin"]!=null && (bool)Session["isAdmin"])
+                return View(db.ItemTypes.ToList());
+            return RedirectToAction("Index", new { controller = "Login", action = "Index" });
         }
 
         // GET: ItemTypes/Details/5
@@ -38,8 +40,6 @@ namespace InventoryManagement.Controllers
                         select item;
             Items items = db.Items.Find(id);
             ViewBag.Items = items;
-            //ViewData["Items"] = query.ToList<Items>();// query;
-            //return View(context.Players.Include(player => player.Team).ToList());
             var itemTypeModel = itemTypes;
             var itemModel = items;
            
@@ -47,7 +47,6 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult test()
         {
-
             return PartialView();
         }
         // GET: ItemTypes/Create

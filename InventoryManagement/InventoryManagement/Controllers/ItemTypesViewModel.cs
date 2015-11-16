@@ -13,10 +13,10 @@ namespace InventoryManagement.Controllers
     {
         public ItemTypes ItemTypeModel { get; set; }
 
-        [Display(Name = "Inventory Locations")]
+        [Display(Name = "Inventory Location")]
         public  IList<IEnumerable<SelectListItem>> InventoryLocations{ get; set; }
 
-        [Display(Name = "Labels")]
+        [Display(Name = "Label")]
         public IList<IEnumerable<SelectListItem>> Labels { get; set; }
     }
 }
