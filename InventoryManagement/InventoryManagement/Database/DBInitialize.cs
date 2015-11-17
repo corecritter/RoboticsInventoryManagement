@@ -13,7 +13,6 @@ namespace InventoryManagement.Database
             Users defaultUser = new Users { UserName = "admin", Password = "admin", isAdmin = true, Email = "a", FirstName = "a", LastName = "a", PhoneNumber = 2222222 };
             context.Users.Add(defaultUser);
             context.SaveChanges();
-            //base.InitializeDatabase(false);
         }
     }
 }

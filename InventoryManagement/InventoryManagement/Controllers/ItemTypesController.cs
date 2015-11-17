@@ -18,9 +18,9 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes
         public ActionResult Index()
         {
-            if(Session["isAdmin"]!=null && (bool)Session["isAdmin"])
+            //if(Session["isAdmin"]!=null && (bool)Session["isAdmin"])
                 return View(db.ItemTypes.ToList());
-            return RedirectToAction("Index", new { controller = "Login", action = "Index" });
+            //return RedirectToAction("Index", new { controller = "Login", action = "Index" });
         }
 
         // GET: ItemTypes/Details/5
@@ -248,6 +248,11 @@ namespace InventoryManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+        public ActionResult CreatePackages()
+        {
+            return RedirectToAction("Index", new { controller = "Packages", action = "Index" });
+        }
+
 
         protected override void Dispose(bool disposing)
         {
