@@ -191,6 +191,7 @@
     <Compile Include="Controllers\PackagesViewModel.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Database\DBInitialize.cs" />
     <Compile Include="Database\InventoryContext.cs" />
     <Compile Include="Database\InventoryLocations.cs" />
     <Compile Include="Database\ItemContext.cs" />

@@ -10,7 +10,7 @@ namespace InventoryManagement.Controllers
     public class LoginController : Controller
     {
         // GET: Login
-        UsersContext _db = new UsersContext();
+        UsersContext db = new UsersContext();
         public ActionResult Index()
         {
             return View();
