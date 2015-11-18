@@ -285,6 +285,7 @@
     <Content Include="Views\Login\Login.cshtml" />
     <Content Include="Views\Bundles\Index.cshtml" />
     <Content Include="Views\Bundles\ItemTypesSelect.cshtml" />
+    <Content Include="Views\CheckIn\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
