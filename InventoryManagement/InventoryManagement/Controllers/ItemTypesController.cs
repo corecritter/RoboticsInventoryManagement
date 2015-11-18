@@ -250,7 +250,7 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult CreatePackages()
         {
-            return RedirectToAction("Index", new { controller = "Packages", action = "Index" });
+            return RedirectToAction("Index", new { controller = "Bundles", action = "Index" });
         }
 
 

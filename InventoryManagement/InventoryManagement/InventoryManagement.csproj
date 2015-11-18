@@ -187,8 +187,8 @@
     <Compile Include="Controllers\LabelsController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\PackagesController.cs" />
-    <Compile Include="Controllers\PackagesViewModel.cs" />
+    <Compile Include="Controllers\BundlesController.cs" />
+    <Compile Include="Controllers\BundlesViewModel.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Database\DBInitialize.cs" />
@@ -283,8 +283,8 @@
     <Content Include="Views\Users\Edit.cshtml" />
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Login\Login.cshtml" />
-    <Content Include="Views\Packages\Index.cshtml" />
-    <Content Include="Views\Packages\ItemTypesSelect.cshtml" />
+    <Content Include="Views\Bundles\Index.cshtml" />
+    <Content Include="Views\Bundles\ItemTypesSelect.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

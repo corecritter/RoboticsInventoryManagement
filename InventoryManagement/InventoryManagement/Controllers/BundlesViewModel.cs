@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace InventoryManagement.Controllers
 {
-    public class PackagesViewModel
+    public class BundlesViewModel
     {
         public List<Schools> Schools { get; set; }
         public List<ItemTypes> ItemTypes { get; set; }

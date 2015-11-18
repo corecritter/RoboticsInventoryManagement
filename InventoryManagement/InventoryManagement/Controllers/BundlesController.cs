@@ -8,7 +8,7 @@ using System.Web.Routing;
 
 namespace InventoryManagement.Controllers
 {
-    public class PackagesController : Controller
+    public class BundlesController : Controller
     {
         private PackageContext db = new PackageContext();
         // GET: Packages
@@ -20,7 +20,7 @@ namespace InventoryManagement.Controllers
             {
                 schools.Add(true); //Default to true (checked)
             }
-            PackagesViewModel vm = new PackagesViewModel
+            BundlesViewModel vm = new BundlesViewModel
             {
                 Schools = db.Schools.ToList(),
                 SchoolsCheckboxes = schools
@@ -29,7 +29,7 @@ namespace InventoryManagement.Controllers
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Index(PackagesViewModel vm)
+        public ActionResult Index(BundlesViewModel vm)
         {
             foreach (bool isChecked in vm.SchoolsCheckboxes)
             {
@@ -39,7 +39,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction("ItemTypesSelect", new RouteValueDictionary(new { checkedSchools = vm.SchoolsCheckboxes }));
         }
 
-        public ActionResult ItemTypesSelect(PackagesViewModel vm)
+        public ActionResult ItemTypesSelect(BundlesViewModel vm)
         {
             IList<bool> itemTypes = new List<bool>();
             foreach (var itemType in db.ItemTypes)
@@ -55,7 +55,7 @@ namespace InventoryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ItemTypesSubmit(PackagesViewModel vm)
+        public ActionResult ItemTypesSubmit(BundlesViewModel vm)
         {
             return null;
         }
