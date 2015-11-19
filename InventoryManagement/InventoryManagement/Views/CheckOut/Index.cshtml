@@ -1,0 +1,24 @@
+﻿@model InventoryManagement.Controllers.CheckOutViewModel
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<table class="table">
+    @for (int i=0; i<Model.Schools.Count; i++)
+    {
+        <tr>
+            <td>
+                @Html.HiddenFor(model => model.Schools[i].SchoolId)
+                @Html.DisplayFor(model => model.Schools[i].SchoolName)
+            </td>
+            <td><!--
+                @Html.ActionLink("Check In", "CheckIn", new { id = Model.Schools[i].SchoolId }) |
+                @Html.ActionLink("Check Out", "CheckOut", new { id = Model.Schools[i].SchoolId })-->
+            </td>
+        </tr>
+    }
+
+</table>
+
