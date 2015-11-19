@@ -20,7 +20,9 @@ namespace InventoryManagement.Controllers
         {
             if(Session["isAdmin"]!=null && (bool)Session["isAdmin"])
                 return View(db.ItemTypes.ToList());
-            return RedirectToAction("Index", new { controller = "Login", action = "Index" });
+            //return RedirectToAction("Index", new { controller = "Login", action = "Index" });
+            //return RedirectToAction("Lockout");
+            return View("No Access");
         }
 
         // GET: ItemTypes/Details/5

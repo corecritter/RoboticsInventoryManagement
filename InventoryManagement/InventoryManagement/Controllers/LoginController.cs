@@ -26,6 +26,7 @@ namespace InventoryManagement.Controllers
                 
                 if (user != null) //Valid credentials 
                 {
+                    Session["LoggedUserName"] = user.FirstName;
                     Session["LoggedUserID"] = user.UserName;
                     Session["isAdmin"] = user.isAdmin;
                 }
@@ -51,6 +52,16 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
+        }
+
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            Session["LoggedUserID"] = null;
+            Session["isAdmin"] = null;
+            return RedirectToAction("Index", "Home");
         }
         //public ActionResult Login(string userName, string password)
         //{
