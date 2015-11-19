@@ -190,6 +190,7 @@
     <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\BundlesViewModel.cs" />
     <Compile Include="Controllers\SchoolsController.cs" />
+    <Compile Include="Controllers\Test1.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Database\DBInitialize.cs" />
     <Compile Include="Database\InventoryContext.cs" />
