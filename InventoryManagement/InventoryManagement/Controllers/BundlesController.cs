@@ -35,8 +35,9 @@ namespace InventoryManagement.Controllers
             {
 
             }
-            
-            return RedirectToAction("ItemTypesSelect", new RouteValueDictionary(new { checkedSchools = vm.SchoolsCheckboxes }));
+            BundlesViewModel vm2 = new BundlesViewModel { SchoolsCheckboxes = vm.SchoolsCheckboxes };
+            //return RedirectToAction("ItemTypesSelect", new RouteValueDictionary(new { checkedSchools = vm.SchoolsCheckboxes }));
+            return RedirectToAction("ItemTypesSelect", new RouteValueDictionary(new { vm = vm2}));
         }
 
         public ActionResult ItemTypesSelect(BundlesViewModel vm)
