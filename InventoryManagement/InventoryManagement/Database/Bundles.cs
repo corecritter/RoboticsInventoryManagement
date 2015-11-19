@@ -6,12 +6,12 @@ using System.Web;
 
 namespace InventoryManagement.Database
 {
-    public class Packages
+    public class Bundles
     {
         [Key]
-        public int PackageId { get; set; } //PK
+        public int BundleId { get; set; } //PK
         [Required(ErrorMessage = "A Package Name is Required")]
-        public string PackageName { get; set; }
+        public string BundleName { get; set; }
         public virtual List<Items> Item { get; set; }
     }
 }

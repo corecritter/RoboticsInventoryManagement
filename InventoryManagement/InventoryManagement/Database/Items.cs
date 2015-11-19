@@ -14,14 +14,14 @@ namespace InventoryManagement.Database
         public int? InventoryLocationId { get; set; }
         public int? SchoolId { get; set; }
         public int? LabelId { get; set; }
-        public int? PackageId { get; set; }
-        public int? checkOutBy { get; set; }
-        public int? checkInBy { get; set; }
+        public int? BundleId { get; set; }
+        public int? CheckedOutById { get; set; }
+        public int? CheckedInById { get; set; }
         
         public virtual ItemTypes ItemType { get; set; }
         public virtual InventoryLocations InventoryLocation { get; set; }
         public virtual Schools School{ get; set; }
         public virtual Labels Label { get; set; }
-        public virtual Packages Package { get; set; }
+        public virtual Bundles Package { get; set; }
     }
 }

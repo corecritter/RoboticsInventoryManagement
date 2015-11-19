@@ -9,14 +9,16 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    
+
     <div class="form-group">
-        @for (int i = 0; i < Model.SchoolsCheckboxes.Count; i++)
+        @Html.HiddenFor(model => model.BundleName)
+        @for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
         {
-            @Html.HiddenFor(model => model.SchoolsCheckboxes[i])
+            @Html.HiddenFor(model => model.SelectedSchoolIds[i])
         }
         @for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
         {
+            @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
             @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
             @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
             <br />
