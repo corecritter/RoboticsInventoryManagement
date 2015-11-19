@@ -18,12 +18,17 @@ namespace InventoryManagement.Controllers
         public ActionResult Index()
         {
             CheckOutViewModel vm = new CheckOutViewModel { Schools = db.Schools.ToList() };
-            return View(db.Schools.ToList());
+            return View(vm);
             //return null;
         }
 
         public ActionResult CheckIn(int id)
         {
+            return null;
+        }
+        public ActionResult CheckOut(int id)
+        {
+
             return null;
         }
 

@@ -14,6 +14,6 @@ namespace InventoryManagement.Controllers
         public Schools SchoolModel { get; set; }
 
         [Display(Name = "Schools")]
-        public IList<Schools> Schools { get; set; };
+        public IList<Schools> Schools { get; set; }
     }
 }

@@ -181,6 +181,7 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\CheckOutViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryLocationsController.cs" />
     <Compile Include="Controllers\ItemTypesController.cs" />
@@ -288,6 +289,7 @@
     <Content Include="Views\Bundles\ItemTypesSelect.cshtml" />
     <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
+    <Content Include="Views\CheckOut\CheckOut.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
