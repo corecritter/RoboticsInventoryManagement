@@ -41,15 +41,18 @@ namespace InventoryManagement.Controllers
         {
             //Checkbox for every school
             IList<bool> schools = new List<bool>();
+            IList<int> schoolIds = new List<int>();
             foreach (var school in db.Schools)
             {
                 schools.Add(true); //Default to true (checked)
+                schoolIds.Add(school.SchoolId);
             }
             BundlesViewModel vm = new BundlesViewModel
             {
                 Schools = db.Schools.ToList(),
                 SchoolsCheckboxes = schools
             };
+            TempData["SchoolIds"] = schoolIds;// vm.SchoolsCheckboxes;
             return View(vm);
         }
 
@@ -63,14 +66,20 @@ namespace InventoryManagement.Controllers
             if (ModelState.IsValid)
             {
                 int index = 0;
-                IList<int> schoolIds = new List<int>();
+                IList<int> schoolIds = (List<int>)TempData["SchoolIds"]; //List of school ids that existed when the form was created
+                IList<int> checkedSchools = new List<int>();
+                var labels = db.Labels.ToList();
+                int numSelected = vm.SchoolsCheckboxes.Where(x => x).Count();
+                //if (labels.Count < numSelected) //Not enough labels for the number of item types selected
+                   // return null;
                 foreach (bool isChecked in vm.SchoolsCheckboxes)
                 {
                     if (isChecked)
-                        schoolIds.Add(vm.Schools[index].SchoolId);
+                        checkedSchools.Add(schoolIds[index]);
                     index++;
                 }
-                TempData["CheckedSchools"] = schoolIds;// vm.SchoolsCheckboxes;
+                TempData["SchoolIds"] = null;
+                TempData["CheckedSchools"] = checkedSchools;// vm.SchoolsCheckboxes;
                 TempData["BundleName"] = vm.BundleName;
                 return RedirectToAction("ItemTypesSelect", new RouteValueDictionary(new { action = "ItemTypesSelect" }));
             }
@@ -79,10 +88,12 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult ItemTypesSelect()
         {
-            IList<bool> itemTypes = new List<bool>();
+            IList<bool> itemTypes = new List<bool>(); //For all the checkboxes
+            IList<int> itemTypesIds = new List<int>();//Store the ItemTypeIds in case someone else deletes one
             foreach (var itemType in db.ItemTypes)
             {
                 itemTypes.Add(false); //Default to true (checked)
+                itemTypesIds.Add(itemType.ItemTypeId);
             }
             BundlesViewModel vm = new BundlesViewModel
             {
@@ -92,6 +103,7 @@ namespace InventoryManagement.Controllers
                 ItemTypesCheckboxes = itemTypes,
                 ItemTypes = db.ItemTypes.ToList()
             };
+            TempData["ItemTypeIds"] = itemTypesIds;
             TempData["CheckedSchools"] = null;
             TempData["BundleName"] = null;
             return View(vm);
@@ -100,34 +112,61 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ItemTypesSubmit(BundlesViewModel vm)
         {
+            var itemTypesIds = (IList<int>)TempData["ItemTypeIds"];
             var itemTypes = db.ItemTypes.ToList();
+            var labels = db.Labels.ToList();
+            //var usedLabels;
+            List<Bundles> tempBundle = new List<Bundles>();
+            IList<Items> tempItems = new List<Items>();
             int numSchools = vm.SelectedSchoolIds.Count;
-            foreach (int schoolId in vm.SelectedSchoolIds)
-                for (int i = 0; i < vm.ItemTypesCheckboxes.Count; i++)
+            int labelIndex = 0;
+            
+            //foreach (int schoolId in vm.SelectedSchoolIds)
+            for (int i = 0; i < vm.ItemTypesCheckboxes.Count; i++)
+            {
+                if (vm.ItemTypesCheckboxes[i])
                 {
-                    if (vm.ItemTypesCheckboxes[i])
+                    var available = itemTypes[i].Item.Where(x => x.CheckedInById == null); //Can't be checked in
+                    available = available.Where(x => x.CheckedOutById == null);            //checked out
+                    available = available.Where(x => x.BundleId == null);                  //or assigned to a bundle
+                    var availableItems = available.ToList();
+                    int numAvailable = availableItems.Count();
+                    if (numAvailable >= numSchools)
                     {
-                        if (itemTypes[i].Item.Count >= numSchools)
+                        foreach (int schoolId in vm.SelectedSchoolIds)
                         {
-                            var available = itemTypes[i].Item.Where(x => x.CheckedInById == null);
-                            available = available.Where(x => x.CheckedOutById == null);
-                            available = available.Where(x => x.BundleId == null);
-                            int numAvailable = available.ToList().Count;
-                            if (numAvailable >= numSchools)
+                            //foreach (var label in labels)
+                            //{
+                            //    var checkLabel = db.Labels.Where(x => x.LabelId == label.LabelId).ToList();
+                            //    if (checkLabel.Count != 0)
+                            //    {
+                            //    }
+                            //}
+                            var newBundle = new Bundles { BundleName = vm.BundleName, SchoolId = schoolId };
+                            tempBundle.Add(newBundle);
+                            for (int j = 0; j < numSchools; j++)
                             {
-                                var newBundle = new Bundles { BundleName = vm.BundleName };
-                                db.Bundles.Add(newBundle);
-                                db.SaveChanges();
-                                int bundleId = newBundle.BundleId;
-
-                                numSchools--;
-
+                                tempItems.Add(availableItems[j]);
                             }
-                            else
-                                return null; //Not enough items to match school demand
+                           
+                            
+                            int bundleId = newBundle.BundleId;
                         }
+                            
                     }
+                    else
+                        return null; //Not enough items to match school demand
                 }
+            }
+            for (int i=0; i<tempBundle.Count; i++)
+            {
+                db.Bundles.Add(tempBundle[i]);
+                db.SaveChanges();
+                for(int j=i*numSchools; j<numSchools*(i+1); j++)
+                {
+                    tempItems[j].BundleId = tempBundle[i].BundleId;
+                }
+            }
             return RedirectToAction("Index");
         }
 

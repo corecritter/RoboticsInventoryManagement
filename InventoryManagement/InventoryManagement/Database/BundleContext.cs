@@ -13,5 +13,6 @@ namespace InventoryManagement.Database
         public DbSet<ItemTypes> ItemTypes { get; set;}
         public DbSet<Items> Items { get; set; }        //Entity Of Items
         public DbSet<Schools> Schools { get; set; }
+        public DbSet<Labels> Labels { get; set; }
     }
 }

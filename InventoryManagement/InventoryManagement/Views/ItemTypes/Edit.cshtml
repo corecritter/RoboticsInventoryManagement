@@ -38,7 +38,7 @@
             {
                 @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemTypeId)
                 @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemId)
-                @Html.HiddenFor(model => model.ItemTypeModel.Item[i].SchoolId)
+                @*Html.HiddenFor(model => model.ItemTypeModel.Item[i].SchoolId)*@
                 @Html.LabelFor(model => model.InventoryLocations)
                 @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations[i])
                 @Html.LabelFor(model => model.Labels)
