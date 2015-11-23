@@ -1,7 +1,41 @@
-﻿
+﻿@model InventoryManagement.Controllers.CheckOutViewModel
 @{
     ViewBag.Title = "CheckOut";
 }
 
-<h2>CheckOut</h2>
+<h2>Check Out</h2>
+<div class="form-group">
+<table class="table">
+    <tr>
+        <td>
+            Item Name
+        </td>
+        <td>
+            Item Label
+        </td>
+        <td>
+            Check Out
+        </td>
+    </tr>
+     @for (int i = 0; i < Model.Items.Count; i++) { 
+        <tr>
+            <td>
+                @Html.DisplayFor(model => Model.Items[i].ItemType.ItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(model => Model.Items[i].Label.LabelName)
+            </td>
+            <td>
+                @Html.CheckBoxFor(model => Model.ItemsCheckBoxes[i])
+            </td>
+        </tr>
+     }
 
+</table>
+    </div>
+<div class="form-group">
+    <div class="col-md-offset-2 col-md-10">
+        <input type="submit" value="Continue" class="btn btn-default" />
+    </div>
+</div>
+    
