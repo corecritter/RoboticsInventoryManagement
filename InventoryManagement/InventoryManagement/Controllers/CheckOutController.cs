@@ -19,15 +19,44 @@ namespace InventoryManagement.Controllers
         {
             CheckOutViewModel vm = new CheckOutViewModel { Schools = db.Schools.ToList() };
             return View(vm);
-            //return null;
         }
-
+        
+        //for check in items view
         public ActionResult CheckIn(int id)
         {
             return null;
         }
+
+        //for check out items view
         public ActionResult CheckOut(int id)
         {
+            if (ModelState.IsValid)
+            {
+                CheckOutViewModel checkOutViewModel = new CheckOutViewModel { Items = db.Items.ToList() };
+                return View(checkOutViewModel);
+            }
+            else
+            {
+                CheckOutViewModel vm = new CheckOutViewModel { Schools = db.Schools.ToList() };
+                return View(vm);
+            }
+        }
+
+        //to do the actual checking out, the second parameter is suppose to be the school id
+        public ActionResult GiveThemItem(CheckOutViewModel vm, int id)
+        {
+            int index = 0;
+            IList<int> itemIds = (List<int>)TempData["ItemIds"]; //all the items
+            IList<int> checkedItems = new List<int>();
+            int numSelected = vm.ItemsCheckBoxes.Where(x => x).Count();
+
+            foreach (bool isChecked in vm.ItemsCheckBoxes)
+            {
+                if (isChecked)
+                    checkedItems.Add(itemIds[index]);
+                index++;
+            }
+            //now to add to each item the school id in the db
 
             return null;
         }
