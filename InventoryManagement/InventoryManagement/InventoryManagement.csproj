@@ -183,6 +183,7 @@
     <Compile Include="Controllers\BundlesController.cs" />
     <Compile Include="Controllers\CheckInController.cs" />
     <Compile Include="Controllers\CheckOutController.cs" />
+    <Compile Include="Controllers\ItemStatusController.cs" />
     <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\CheckOutViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -213,6 +214,7 @@
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\ItemStatusViewModel.cs" />
     <Compile Include="Models\ItemTypesViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
@@ -301,6 +303,7 @@
     <Content Include="Views\CheckOut\ItemTypesSelect.cshtml" />
     <Content Include="Views\CheckOut\ItemsSelect.cshtml" />
     <Content Include="Views\CheckIn\InventoryReturnReminder.cshtml" />
+    <Content Include="Views\ItemStatus\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
