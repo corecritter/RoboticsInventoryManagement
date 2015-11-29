@@ -153,7 +153,6 @@ namespace InventoryManagement.Controllers
             {
                 foreach (var item in vm.ItemsToCheckOut)
                 {
-
                     if (item.CheckedOutById == null)
                     {
                         var dbItem = db.Items.Find(item.ItemId);
@@ -165,6 +164,12 @@ namespace InventoryManagement.Controllers
                 }
             }
             return RedirectToAction("Index");
+        }
+
+        //Clicked Check In, reditect to CheckIn Controller, pass school Id
+        public ActionResult CheckIn(int id)
+        {
+            return RedirectToAction("Index", new { Controller="CheckIn", Action="Index", id=id });
         }
     }
 }

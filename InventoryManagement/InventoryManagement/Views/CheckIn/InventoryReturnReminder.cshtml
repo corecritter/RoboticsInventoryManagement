@@ -1,10 +1,11 @@
 ﻿@model InventoryManagement.Models.CheckInViewModel
+
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "InventoryReturnReminder";
 }
 
-<h2>Check In</h2>
-@using (Html.BeginForm("CheckInItems", "CheckIn", FormMethod.Post))
+<h2>Return Inventory Reminder</h2>
+@using (Html.BeginForm("InventoryReturnConfirm", "CheckIn", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -17,15 +18,11 @@
                 Item Label
             </td>
             <td>
-                Returning
+                Inventory Location
             </td>
         </tr>
-        @for(int i=0; i< Model.RentedItems.Count; i++)
+        @for (int i = 0; i < Model.RentedItems.Count; i++)
         {
-            @Html.HiddenFor(model => model.RentedItems[i].ItemId)
-            @Html.HiddenFor(model => model.RentedItems[i].ItemType.ItemName)
-            @Html.HiddenFor(model => model.RentedItems[i].Label.LabelName)
-            @Html.HiddenFor(model => model.RentedItems[i].InventoryLocation.InventoryLocationName)
             <tr>
                 <td>
                     @Html.DisplayFor(model => model.RentedItems[i].ItemType.ItemName)
@@ -34,15 +31,14 @@
                     @Html.DisplayFor(model => model.RentedItems[i].Label.LabelName)
                 </td>
                 <td>
-                    @Html.CheckBoxFor(model => model.RentedItemsCheckboxes[i])
+                    @Html.DisplayFor(model => model.RentedItems[i].InventoryLocation.InventoryLocationName)
                 </td>
             </tr>
         }
     </table>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Check In" class="btn btn-default" />
+            <input type="submit" value="OK" class="btn btn-default" />
         </div>
     </div>
 }
-
