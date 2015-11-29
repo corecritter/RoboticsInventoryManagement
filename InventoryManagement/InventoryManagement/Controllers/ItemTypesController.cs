@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using InventoryManagement.Database;
+using InventoryManagement.Models;
 using System.Web.Routing;
 
 namespace InventoryManagement.Controllers

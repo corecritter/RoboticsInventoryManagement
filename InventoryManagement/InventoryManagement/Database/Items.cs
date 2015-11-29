@@ -15,8 +15,8 @@ namespace InventoryManagement.Database
         public int? CheckedOutSchoolId { get; set; }
         public int? LabelId { get; set; }
         public int? BundleId { get; set; }
-        public int? CheckedOutById { get; set; }
-        public int? CheckedInById { get; set; }
+        public string CheckedOutById { get; set; }
+        public string CheckedInById { get; set; }
         
         public virtual ItemTypes ItemType { get; set; }
         public virtual InventoryLocations InventoryLocation { get; set; }

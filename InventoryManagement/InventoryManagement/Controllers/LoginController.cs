@@ -28,6 +28,7 @@ namespace InventoryManagement.Controllers
                 {
                     Session["LoggedUserName"] = user.FirstName;
                     Session["LoggedUserID"] = user.UserName;
+                    //Session["LoggedUserIdNum"] = user.
                     Session["isAdmin"] = user.isAdmin;
                 }
                 else //Login UserName/PassWord doesn't exist

@@ -7,7 +7,7 @@ using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 
-namespace InventoryManagement.Controllers
+namespace InventoryManagement.Models
 {
     public class ItemTypesViewModel
     {

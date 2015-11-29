@@ -6,7 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace InventoryManagement.Controllers
+namespace InventoryManagement.Models
 {
     public class BundlesViewModel
     {

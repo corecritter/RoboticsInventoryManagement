@@ -1,0 +1,31 @@
+﻿@model InventoryManagement.Models.CheckOutViewModel
+@{
+    ViewBag.Title = "BundleSelection";
+}
+
+<h2>BundleSelection</h2>
+@using (Html.BeginForm())
+{
+    <table>
+        <tr>
+            <td>
+                @Html.Label("All Items")
+            </td>
+            <td>
+                @Html.ActionLink("Select", "MakeBundleSelection", new { bundleId = 0, schoolId = Model.SelectedSchoolId})
+            </td>
+        </tr>
+        @for (int i = 0; i < Model.Bundles.Count; i++)
+        {
+            <tr>
+                <td>
+                    @Html.LabelFor(model => Model.Bundles[i].BundleName)
+                </td>
+                <td>
+                    @Html.ActionLink("Select", "MakeBundleSelection", new { bundleId = Model.Bundles[i].BundleId, schoolId = Model.SelectedSchoolId })
+                </td>
+            </tr>
+        }
+    </table>
+}
+

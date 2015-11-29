@@ -1,4 +1,4 @@
-﻿@model InventoryManagement.Controllers.CheckOutViewModel
+﻿@model InventoryManagement.Models.CheckOutViewModel
 @{
     ViewBag.Title = "Index";
 }
@@ -15,7 +15,7 @@
             </td>
             <td>
                 @Html.ActionLink("Check In", "CheckIn", new { id = Model.Schools[i].SchoolId }) |
-                @Html.ActionLink("Check Out", "CheckOut", new { id = Model.Schools[i].SchoolId })
+                @Html.ActionLink("Check Out", "SelectSchoolOut", new { id = Model.Schools[i].SchoolId })
             </td>
         </tr>
     }

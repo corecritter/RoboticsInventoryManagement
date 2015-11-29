@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using InventoryManagement.Database;
+using InventoryManagement.Models;
 using System.Web.Routing;
 
 namespace InventoryManagement.Controllers
@@ -119,9 +120,7 @@ namespace InventoryManagement.Controllers
             List<Bundles> tempBundle = new List<Bundles>();
             IList<Items> tempItems = new List<Items>();
             int numSchools = vm.SelectedSchoolIds.Count;
-            int labelIndex = 0;
-            
-            //foreach (int schoolId in vm.SelectedSchoolIds)
+
             for (int i = 0; i < vm.ItemTypesCheckboxes.Count; i++)
             {
                 if (vm.ItemTypesCheckboxes[i])

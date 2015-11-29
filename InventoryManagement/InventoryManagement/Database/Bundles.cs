@@ -14,5 +14,6 @@ namespace InventoryManagement.Database
         public string BundleName { get; set; }
         public int SchoolId { get; set; }
         public virtual Schools School { get; set; }
+        public virtual List<Items> Items { get; set; }
     }
 }

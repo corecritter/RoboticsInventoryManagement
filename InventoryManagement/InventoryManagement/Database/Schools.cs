@@ -16,5 +16,6 @@ namespace InventoryManagement.Database
         public string Phone { get; set; }
 
         public virtual List<Items> Item { get; set; }
+        public virtual List<Bundles> Bundles { get; set; }
     }
 }
