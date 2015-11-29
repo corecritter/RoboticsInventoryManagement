@@ -116,54 +116,65 @@ namespace InventoryManagement.Controllers
             var itemTypesIds = (IList<int>)TempData["ItemTypeIds"];
             var itemTypes = db.ItemTypes.ToList();
             var labels = db.Labels.ToList();
-            //var usedLabels;
-            List<Bundles> tempBundle = new List<Bundles>();
-            IList<Items> tempItems = new List<Items>();
+            List<Bundles> tempBundle = new List<Bundles>(); //Temporarily hold new bundles
+            IList<Items> tempItems = new List<Items>();    //Temporarily hold new items
             int numSchools = vm.SelectedSchoolIds.Count;
-
-            for (int i = 0; i < vm.ItemTypesCheckboxes.Count; i++)
+            //For Every Selected School
+            foreach (int schoolId in vm.SelectedSchoolIds)
             {
-                if (vm.ItemTypesCheckboxes[i])
+                bool canCreate = true;
+                //For Eveery Selected Item Type
+                for (int i = 0; i < vm.ItemTypesCheckboxes.Count; i++)
                 {
-                    var available = itemTypes[i].Item.Where(x => x.CheckedInById == null); //Can't be checked in
-                    available = available.Where(x => x.CheckedOutById == null);            //checked out
-                    available = available.Where(x => x.BundleId == null);                  //or assigned to a bundle
-                    var availableItems = available.ToList();
-                    int numAvailable = availableItems.Count();
-                    if (numAvailable >= numSchools)
+                    if (vm.ItemTypesCheckboxes[i])
                     {
-                        foreach (int schoolId in vm.SelectedSchoolIds)
+                        var available = itemTypes[i].Item.Where(x => x.CheckedInById == null); //Can't be checked in
+                        available = available.Where(x => x.CheckedOutById == null);            //checked out
+                        available = available.Where(x => x.BundleId == null);                  //or assigned to a bundle
+                        var availableItems = available.ToList();
+                        int numAvailable = availableItems.Count();
+                        //Make sure there are enough items available for the number of schools
+                        if (numAvailable >= numSchools)
                         {
-                            //foreach (var label in labels)
-                            //{
-                            //    var checkLabel = db.Labels.Where(x => x.LabelId == label.LabelId).ToList();
-                            //    if (checkLabel.Count != 0)
-                            //    {
-                            //    }
-                            //}
-                            var newBundle = new Bundles { BundleName = vm.BundleName, SchoolId = schoolId };
-                            tempBundle.Add(newBundle);
                             for (int j = 0; j < numSchools; j++)
                             {
                                 tempItems.Add(availableItems[j]);
                             }
-                           
-                            
-                            int bundleId = newBundle.BundleId;
                         }
-                            
+                        //Stop The Process
+                        else
+                        {
+                            canCreate = false; //Not enough items to match school demand
+                            break;
+                        }
                     }
-                    else
-                        return null; //Not enough items to match school demand
                 }
+                //Create Temporary Bundle
+                if (canCreate)
+                {
+                    var newBundle = new Bundles { BundleName = vm.BundleName, SchoolId = schoolId };
+                    tempBundle.Add(newBundle);
+                }
+                else
+                    return null;
             }
-            for (int i=0; i<tempBundle.Count; i++)
+            //Add all the temp bundles to the database
+            for (int i = 0; i < tempBundle.Count; i++)
             {
                 db.Bundles.Add(tempBundle[i]);
                 db.SaveChanges();
-                for(int j=i*numSchools; j<numSchools*(i+1); j++)
+            }
+            //Associate Temporary Items with bundle id and save
+            for (int i = 0; i < tempBundle.Count; i++)
+            { 
+                int currIndex = 0;
+                for (int j = i * numSchools; j < numSchools * (i + 1); j++)
                 {
-                    tempItems[j].BundleId = tempBundle[i].BundleId;
+                    var dbItem = db.Items.Find(tempItems[j].ItemId);
+                    dbItem.BundleId = tempBundle[currIndex].BundleId;
+                    db.Entry(dbItem).State = EntityState.Modified;
+                    db.SaveChanges();
+                    currIndex++;
                 }
             }
             return RedirectToAction("Index");
