@@ -11,9 +11,10 @@ namespace InventoryManagement.Models
 {
     public class CheckOutViewModel
     {
-        public Schools SchoolModel { get; set; }
-        public int SelectedSchoolId { get; set; } //For the selected school id
-        public int SelectedBundleId { get; set; }//For the selected bundle id
+        //For the selected school id
+        public int SelectedSchoolId { get; set; }
+        //For the selected bundle id
+        public int SelectedBundleId { get; set; }
 
         //for the index view
         [Display(Name = "Schools")]
@@ -22,8 +23,6 @@ namespace InventoryManagement.Models
         //For BundleSelection View
         public IList<Bundles> Bundles { get; set; }
 
-        public Items ItemModel { get; set; }
-
         //For ItemTypesSelectView
         public IList<ItemTypes> ItemTypesModel { get; set; }
         public IList<bool> ItemTypesCheckboxes { get; set; }
@@ -31,14 +30,5 @@ namespace InventoryManagement.Models
 
         //For ItemsSelect View
         public IList<Items> ItemsToCheckOut { get; set; }
-
-        //for check out view
-        [Display(Name = "Item")]
-        public IList<bool> ItemsCheckBoxes { get; set; }
-
-        //for check in view
-        [Display(Name = "Item")]
-        public IList<Items> RenameThis { get; set; }
-
     }
 }

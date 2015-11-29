@@ -37,17 +37,17 @@ namespace InventoryManagement.Controllers
                 return View(vm);
             }
         }
-        
+
         //Prepare BundleSelection page to Select a Bundle (if any)
         [HttpGet]
         public ActionResult BundleSelection()
         {
             //var associatedBundles = from bundle in db.Bundles where bundle.SchoolId == ((int)TempData["SelectedSchoold"]) select bundle;
-            if(TempData["SelectedSchoold"]==null)
+            if (TempData["SelectedSchoold"] == null)
                 return RedirectToAction("Index");
             int selectedSchoolId = (int)TempData["SelectedSchoold"];
             var associatedBundles = db.Schools.Find(selectedSchoolId).Bundles;
-            CheckOutViewModel vm = new CheckOutViewModel { Bundles = associatedBundles, SelectedSchoolId = selectedSchoolId  };
+            CheckOutViewModel vm = new CheckOutViewModel { Bundles = associatedBundles, SelectedSchoolId = selectedSchoolId };
             return View(vm);
         }
 
@@ -55,24 +55,24 @@ namespace InventoryManagement.Controllers
         public ActionResult MakeBundleSelection(int bundleId, int schoolId)
         {
             IList<bool> itemTypeCheckboxes = new List<bool>();
-            if (bundleId!=0)//A Bundle Has been Selected
+            if (bundleId != 0)//A Bundle Has been Selected
             {
                 var selectedBundle = db.Bundles.Find(bundleId);
                 bool found;
-                foreach(var ItemType in db.ItemTypes)
+                foreach (var ItemType in db.ItemTypes)
                 {
                     //var available = itemTypes[i].Item.Where(x => x.CheckedInById == null); //Can't be checked in
                     found = false;
-                    for(int i=0; i< selectedBundle.Items.Count; i++)
+                    for (int i = 0; i < selectedBundle.Items.Count; i++)
                     {
                         if (selectedBundle.Items[i].ItemTypeId == ItemType.ItemTypeId)
                         {
                             found = true;
                             itemTypeCheckboxes.Add(true);
                             break;
-                        }   
+                        }
                     }
-                    if(!found)
+                    if (!found)
                         itemTypeCheckboxes.Add(false);
                 }
             }
@@ -138,7 +138,6 @@ namespace InventoryManagement.Controllers
             return RedirectToAction("ItemsSelect");
         }
 
-
         //Show View With Items and Labels to hand out
         public ActionResult ItemsSelect()
         {
@@ -166,50 +165,6 @@ namespace InventoryManagement.Controllers
                 }
             }
             return RedirectToAction("Index");
-        }
-
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult SubmitItemTypes(CheckOutViewModel vm)
-        {
-            int currIndex = 0;
-            IList<int> selectedItemTypeIds = new List<int>();
-            foreach(bool itemSelected in vm.ItemTypesCheckboxes)
-            {
-                if (itemSelected)
-                {
-                    selectedItemTypeIds.Add(vm.ItemTypesModel[currIndex].ItemTypeId);
-                }
-                currIndex++;
-            }
-            return null;
-        }
-
-
-        //to do the actual checking out, the second parameter is suppose to be the school id
-        public ActionResult GiveThemItem(CheckOutViewModel vm, int id)
-        {
-            int index = 0;
-            IList<int> itemIds = (List<int>)TempData["ItemIds"]; //all the items
-            IList<int> checkedItems = new List<int>();
-            int numSelected = vm.ItemsCheckBoxes.Where(x => x).Count();
-
-            foreach (bool isChecked in vm.ItemsCheckBoxes)
-            {
-                if (isChecked)
-                    checkedItems.Add(itemIds[index]);
-                index++;
-            }
-            //now to add to each item the school id in the db
-
-            return null;
-        }
-        //for check in items view
-        public ActionResult CheckIn(int id)
-        {
-            return null;
         }
     }
 }
