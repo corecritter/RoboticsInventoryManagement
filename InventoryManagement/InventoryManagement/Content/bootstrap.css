@@ -2001,6 +2001,12 @@ textarea.input-lg {
     text-align: right;
   }
 }
+@media (min-width: 768px) {
+  .form-horizontalLeft .control-label {
+    text-align: left;
+  }
+}
+
 
 .btn {
   display: inline-block;

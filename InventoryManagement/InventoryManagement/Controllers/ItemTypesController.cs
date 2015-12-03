@@ -53,7 +53,7 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new ItemTypes { HasLabel = true });
         }
 
         // POST: ItemTypes/Create
@@ -61,7 +61,7 @@ namespace InventoryManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ItemTypeId,ItemName,Quantity")] ItemTypes itemTypes)
+        public ActionResult Create([Bind(Include = "ItemTypeId,ItemName,Quantity,HasLabel")] ItemTypes itemTypes)
         {
             if (ModelState.IsValid)
             {

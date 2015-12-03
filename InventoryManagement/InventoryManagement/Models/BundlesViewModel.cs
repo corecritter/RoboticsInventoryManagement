@@ -10,17 +10,19 @@ namespace InventoryManagement.Models
 {
     public class BundlesViewModel
     {
+        [Required(ErrorMessage = "A Bundle Name is required")]
+        public string BundleName { get; set; }
+
         public List<Schools> Schools { get; set; }
         public List<ItemTypes> ItemTypes { get; set; }
-        [Required(ErrorMessage = "A Bundle Name is required")]
-        public string BundleName { get; set;}
-        //public Packages PackageModel { get; set; }
-
-        //[Display(Name = "Schools")]
-        //public IEnumerable<SelectListItem> Schools { get; set; }
-        //public string selectedValue { get; set; }
+        
         public IList<int> SelectedSchoolIds { get; set; }
         public IList<bool> SchoolsCheckboxes { get; set; }
+        
+        public List<ItemTypes> SelectedItemTypes { get; set; }
         public IList<bool> ItemTypesCheckboxes { get; set; }
+
+        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be no less than 1.")]
+        public IList<int> ItemQuantityFields { get; set; }
     }
 }

@@ -1,29 +1,32 @@
 ﻿@model InventoryManagement.Models.BundlesViewModel
 
 @{
-    ViewBag.Title = "ItemTypesSubmit";
+    ViewBag.Title = "ItemQuantitySelect";
 }
 
-<h2>Select Item Types</h2>
-@using (Html.BeginForm("ItemTypesSubmit", "Bundles", FormMethod.Post))
+<h2>Item Quantity Select</h2>
+@using (Html.BeginForm("ItemQuantitySubmit", "Bundles", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-    <div class=""form-horizontal">
+    <div class="form-group">
         @Html.HiddenFor(model => model.BundleName)
         @for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
         {
             @Html.HiddenFor(model => model.SelectedSchoolIds[i])
         }
-        @for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
+        @for (int i = 0; i < Model.SelectedItemTypes.Count; i++)
+        {
+            @Html.HiddenFor(model => model.SelectedItemTypes[i].ItemTypeId)
+        }
+        @for (int i = 0; i < Model.ItemQuantityFields.Count; i++)
         {
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
-            @Html.HiddenFor(model => model.ItemTypes[i].ItemName)
             <div class="form-group">
-                @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
+                @Html.DisplayFor(model => model.SelectedItemTypes[i].ItemName)
                 <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
+                    @Html.EditorFor(model => model.ItemQuantityFields[i])
                 </div>
             </div>
         }
@@ -34,3 +37,4 @@
         </div>
     </div>
 }
+
