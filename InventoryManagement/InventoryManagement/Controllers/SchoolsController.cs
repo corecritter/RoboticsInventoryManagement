@@ -78,6 +78,7 @@ namespace InventoryManagement.Controllers
             return RedirectToAction("Index");
         }
 
+        
 
         // GET: Schools/Edit/5
         public ActionResult Edit(int? id)
@@ -91,7 +92,12 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
-            return View(schools);
+            SchoolsViewModel vm = new SchoolsViewModel
+            {
+                SchoolModel = schools,
+                Labels = createLabelSelectList()
+            };
+            return View(vm);
         }
 
         // POST: Schools/Edit/5
@@ -99,15 +105,33 @@ namespace InventoryManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "SchoolId,SchoolName,TeacherName,Email,Phone")] Schools schools)
+        public ActionResult Edit(SchoolsViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(schools).State = EntityState.Modified;
+                var existingLabel = db.Schools.Where(school => school.LabelId == vm.SchoolModel.LabelId);
+                existingLabel = existingLabel.Where(school => school.SchoolId != vm.SchoolModel.SchoolId);
+
+                var existingSchool = db.Schools.Where(school => school.SchoolName == vm.SchoolModel.SchoolName);
+                existingSchool = existingSchool.Where(school => school.SchoolId != vm.SchoolModel.SchoolId);
+
+                if (existingSchool.ToList().Count > 0)
+                {
+                    ModelState.AddModelError("", "School Name already exists");
+                    vm.Labels = createLabelSelectList();
+                    return View(vm);
+                }
+                else if (existingLabel.ToList().Count > 0)
+                {
+                    ModelState.AddModelError("", "Another School is already associated with the selected label");
+                    vm.Labels = createLabelSelectList();
+                    return View(vm);
+                }
+
+                db.Entry(vm.SchoolModel).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
             }
-            return View(schools);
+            return RedirectToAction("Index");
         }
 
         // GET: Schools/Delete/5
