@@ -137,7 +137,7 @@ namespace InventoryManagement.Controllers
             //For every item type selected, display a quantity field
             BundlesViewModel vm = (BundlesViewModel)TempData["BundlesViewModel"];
             
-            IList<int> itemQuantityFields = new List<int>();
+            IList<int> itemQuantityFields = new List<int>(); //Int for every quantity
             foreach(var selectedItemType in vm.SelectedItemTypes)
             {
                 itemQuantityFields.Add(1); 
@@ -154,14 +154,16 @@ namespace InventoryManagement.Controllers
             List<Bundles> tempBundle = new List<Bundles>(); //Temporarily hold new bundles
             IList<Items> tempItems = new List<Items>();    //Temporarily hold new items
             int numSchools = vm.SelectedSchoolIds.Count;
+
+            //Create the Bundles
             //For Every Selected School
             foreach (int schoolId in vm.SelectedSchoolIds)
             {
                 bool canCreate = true;
                 //For Every Selected Item Type
-                for (int i = 0; i < vm.ItemTypes.Count; i++)
+                for (int i = 0; i < vm.SelectedItemTypes.Count; i++)
                 {
-                    var itemType = db.ItemTypes.Find(vm.ItemTypes[i].ItemTypeId);
+                    var itemType = db.ItemTypes.Find(vm.SelectedItemTypes[i].ItemTypeId);
                     if (itemType == null)
                         return RedirectToAction("Index");
                     var available = itemType.Item.Where(x => x.CheckedInById == null); //Can't be checked in
