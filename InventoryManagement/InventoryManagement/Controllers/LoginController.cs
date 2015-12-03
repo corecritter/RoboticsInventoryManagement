@@ -23,7 +23,6 @@ namespace InventoryManagement.Controllers
             {
                 //IQueryable<db.Users> query;
                 var user = db.Users.FirstOrDefault(u => u.UserName == use.UserName && u.Password == use.Password);
-                
                 if (user != null) //Valid credentials 
                 {
                     Session["LoggedUserName"] = user.FirstName;

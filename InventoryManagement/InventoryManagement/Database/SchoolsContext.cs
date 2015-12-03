@@ -8,8 +8,8 @@ namespace InventoryManagement.Database
 {
     public class SchoolsContext : DbContext
     {
+        public DbSet<Schools> Schools { get; set; }
+        public DbSet<Labels> Labels { get; set; }
         public DbSet<InventoryLocations> InventoryLocations { get; set; }
-
-        public DbSet<InventoryManagement.Database.Schools> Schools { get; set; }
     }
 }
