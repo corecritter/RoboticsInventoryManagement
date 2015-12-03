@@ -40,12 +40,19 @@
                 {
                     @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemTypeId)
                     @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemId)
-                    @Html.LabelFor(model => model.InventoryLocations)
-                    @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations[i])
-                    @Html.LabelFor(model => model.Labels)
-                    @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].LabelId, Model.Labels[i])
-                    @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemTypeModel.Item[i].ItemId })
-                    <br />
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.InventoryLocations, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations[i], new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Labels, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].LabelId, Model.Labels[i], new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                        @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemTypeModel.Item[i].ItemId })
+                    </div>
                 }
             </div>
         }
