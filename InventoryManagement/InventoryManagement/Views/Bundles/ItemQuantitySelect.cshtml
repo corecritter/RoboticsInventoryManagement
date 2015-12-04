@@ -24,7 +24,8 @@
         {
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
             <div class="form-group">
-                @Html.DisplayFor(model => model.SelectedItemTypes[i].ItemName)
+                <label class="control-label col-md-2">@Html.DisplayFor(model => model.SelectedItemTypes[i].ItemName)</label>
+                
                 <div class="col-md-10">
                     @Html.EditorFor(model => model.ItemQuantityFields[i])
                 </div>

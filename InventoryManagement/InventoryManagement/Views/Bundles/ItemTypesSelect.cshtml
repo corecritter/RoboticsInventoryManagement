@@ -21,9 +21,9 @@
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
             @Html.HiddenFor(model => model.ItemTypes[i].ItemName)
             <div class="form-group">
-                @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
+                <label class="control-label col-md-2">@Html.DisplayFor(model => Model.ItemTypes[i].ItemName)</label>
                 <div class="col-md-10">
-                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
+                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i], htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
         }
