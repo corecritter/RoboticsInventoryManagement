@@ -19,37 +19,22 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes
         public ActionResult Index()
         {
-            if(Session["isAdmin"]!=null && (bool)Session["isAdmin"])
-                return View(db.ItemTypes.ToList());
+            if (Session["isAdmin"] != null && (bool)Session["isAdmin"])
+            {
+                var itemTypes = db.ItemTypes.OrderBy(item => item.ItemName).ToList();
+                IList<int> itemTypesQuantities = new List<int>();
+                foreach (var itemType in itemTypes)
+                    itemTypesQuantities.Add(itemType.Item.Count);
+                ItemTypesIndexViewModel vm = new ItemTypesIndexViewModel
+                {
+                    ItemTypesModel = itemTypes,
+                    ItemQuantities = itemTypesQuantities
+                };
+                return View(vm);
+            }
             return RedirectToAction("Index", new { controller = "Login", action = "Index" });
         }
 
-        // GET: ItemTypes/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            ItemTypes itemTypes = db.ItemTypes.Find(id);
-            if (itemTypes == null)
-            {
-                return HttpNotFound();
-            }
-            IQueryable<Items> query  = from item in db.Items
-                        where item.ItemTypeId == itemTypes.ItemTypeId
-                        select item;
-            Items items = db.Items.Find(id);
-            ViewBag.Items = items;
-            var itemTypeModel = itemTypes;
-            var itemModel = items;
-           
-            return View(itemTypes);
-        }
-        public ActionResult test()
-        {
-            return PartialView();
-        }
         // GET: ItemTypes/Create
         public ActionResult Create()
         {
@@ -79,6 +64,38 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index");
             }
             return View(itemTypes);
+        }
+
+        public ActionResult Add(int id)
+        {
+            var itemType = db.ItemTypes.Find(id);
+            if (itemType == null)
+                return RedirectToAction("Index");
+            ItemTypesQuantityModel vm = new ItemTypesQuantityModel
+            {
+                ItemType = itemType,
+                Quantity = 1
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddItemQuantity(ItemTypesQuantityModel vm)
+        {
+            //if (ModelState.IsValid)
+            //{
+                var itemType = db.ItemTypes.Find(vm.ItemType.ItemTypeId);
+                if (itemType == null)
+                    return RedirectToAction("Index");
+                for(int i=0; i<vm.Quantity; i++)
+                {
+                    var item = new Items { ItemTypeId = itemType.ItemTypeId };
+                    db.Items.Add(item);
+                    db.SaveChanges();
+                }
+            //}
+            return RedirectToAction("Index");
         }
 
         // GET: ItemTypes/Edit/5
@@ -149,7 +166,6 @@ namespace InventoryManagement.Controllers
                 labelSelectLists.Add(currLabelList);
             }
 
-
             ItemTypesViewModel vm = new ItemTypesViewModel
             {
                 ItemTypeModel = itemTypeModel,
@@ -158,22 +174,6 @@ namespace InventoryManagement.Controllers
             };
             return View(vm);
         }
-
-        // POST: ItemTypes/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public ActionResult Edit([Bind(Include = "ItemTypeId,ItemName,Quantity")] ItemTypes itemTypes)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        db.Entry(itemTypes).State = EntityState.Modified;
-        //        db.SaveChanges();
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(itemTypes);
-        //}
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -194,7 +194,6 @@ namespace InventoryManagement.Controllers
             return null;
         }
 
-
         // GET: ItemTypes/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -209,6 +208,7 @@ namespace InventoryManagement.Controllers
             }
             return View(itemTypes);
         }
+
         public ActionResult DeleteItem(int? itemId)
         {
             if (itemId == null)
@@ -221,6 +221,7 @@ namespace InventoryManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Edit", new RouteValueDictionary(new { action = "Edit", id = itemTypeId}));
         }
+
         public ActionResult AddItem(int? itemTypeId)
         {
             if (itemTypeId == null)
@@ -237,8 +238,6 @@ namespace InventoryManagement.Controllers
             return RedirectToAction("Edit", new RouteValueDictionary(new { action = "Edit", id = itemTypeId }));
         }
 
-
-
         // POST: ItemTypes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -249,11 +248,11 @@ namespace InventoryManagement.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
+
         public ActionResult CreatePackages()
         {
             return RedirectToAction("Index", new { controller = "Bundles", action = "Index" });
         }
-
 
         protected override void Dispose(bool disposing)
         {

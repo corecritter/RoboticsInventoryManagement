@@ -266,7 +266,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\ItemTypes\Create.cshtml" />
     <Content Include="Views\ItemTypes\Delete.cshtml" />
-    <Content Include="Views\ItemTypes\Details.cshtml" />
     <Content Include="Views\ItemTypes\Edit.cshtml" />
     <Content Include="Views\ItemTypes\Index.cshtml" />
     <Content Include="Views\Shared\_HomeLayout.cshtml" />
@@ -281,7 +280,6 @@
     <Content Include="Views\Labels\Details.cshtml" />
     <Content Include="Views\Labels\Edit.cshtml" />
     <Content Include="Views\Labels\Index.cshtml" />
-    <Content Include="Views\Login\Test.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
     <Content Include="Views\Schools\Create.cshtml" />
     <Content Include="Views\Schools\Delete.cshtml" />
@@ -310,6 +308,7 @@
     <Content Include="Views\ItemStatus\Index.cshtml" />
     <Content Include="Views\Bundles\ItemQuantitySelect.cshtml" />
     <Content Include="Views\CheckOut\QuantitySelect.cshtml" />
+    <Content Include="Views\ItemTypes\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

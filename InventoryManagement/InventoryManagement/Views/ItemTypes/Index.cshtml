@@ -1,4 +1,5 @@
-﻿@model IEnumerable<InventoryManagement.Database.ItemTypes>
+﻿@*model IEnumerable<InventoryManagement.Database.ItemTypes>*@
+@model InventoryManagement.Models.ItemTypesIndexViewModel
 
 @{
     ViewBag.Title = "Item Management";
@@ -7,34 +8,34 @@
 <h2>Item Management</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Create New", "Create") |
     @Html.ActionLink("Manage Packages", "CreatePackages")
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.ItemName)
+            @Html.DisplayNameFor(model => model.ItemTypesModel[0].ItemName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Quantity)
+            @Html.DisplayName("Quantity")
         </th>
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@for (int i = 0; i < Model.ItemTypesModel.Count; i++)
+{
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.ItemName)
+            @Html.DisplayFor(model => model.ItemTypesModel[i].ItemName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Quantity)
+            @Html.DisplayFor(model => model.ItemQuantities[i])
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ItemTypeId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ItemTypeId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.ItemTypeId })
+            @Html.ActionLink("Add", "Add", new { id = Model.ItemTypesModel[i].ItemTypeId }) |
+            @Html.ActionLink("Edit", "Edit", new { id = Model.ItemTypesModel[i].ItemTypeId }) |
+            @Html.ActionLink("Delete", "Delete", new { id = Model.ItemTypesModel[i].ItemTypeId })
         </td>
     </tr>
 }
-
 </table>
