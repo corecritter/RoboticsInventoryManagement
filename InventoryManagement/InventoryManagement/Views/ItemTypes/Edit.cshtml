@@ -38,7 +38,6 @@
                         @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemTypeId)
                         @Html.HiddenFor(model => model.ItemTypeModel.Item[i].ItemId)
 
-
                         <div class="row">
                             <div class="col-md-4">
                                 @Html.LabelFor(model => model.InventoryLocations) @Html.DropDownListFor(model => model.ItemTypeModel.Item[i].InventoryLocationId, Model.InventoryLocations[i])

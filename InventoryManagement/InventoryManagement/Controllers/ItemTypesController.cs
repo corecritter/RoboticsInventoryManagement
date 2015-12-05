@@ -38,7 +38,12 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes/Create
         public ActionResult Create()
         {
-            return View(new ItemTypes { HasLabel = true });
+            ItemTypesQuantityModel vm = new ItemTypesQuantityModel
+            {
+                ItemType = new ItemTypes { HasLabel = true },
+                Quantity = 0
+            };
+            return View(vm);
         }
 
         // POST: ItemTypes/Create
@@ -46,24 +51,20 @@ namespace InventoryManagement.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ItemTypeId,ItemName,Quantity,HasLabel")] ItemTypes itemTypes)
+        public ActionResult Create(ItemTypesQuantityModel vm)
         {
-            if (ModelState.IsValid)
-            {
-                db.ItemTypes.Add(itemTypes);
+            if (vm == null)
+                return RedirectToAction("Index");
+
+                db.ItemTypes.Add(vm.ItemType);
                 db.SaveChanges();
-                for (int i= 0; i < itemTypes.Quantity; i++)
+                for (int i= 0; i < vm.Quantity; i++)
                 {
-                    var newItem = new Items { ItemTypeId = itemTypes.ItemTypeId };
+                    var newItem = new Items { ItemTypeId = vm.ItemType.ItemTypeId };
                     db.Items.Add(newItem);
                     db.SaveChanges();
                 }
-                IQueryable < InventoryManagement.Database.Items > query =  from item in db.Items
-                            where item.ItemTypeId == itemTypes.ItemTypeId
-                            select item;
                 return RedirectToAction("Index");
-            }
-            return View(itemTypes);
         }
 
         public ActionResult Add(int id)

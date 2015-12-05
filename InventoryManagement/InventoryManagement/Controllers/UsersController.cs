@@ -17,7 +17,11 @@ namespace InventoryManagement.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            if (TempData["error"] != null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
+            return View(db.Users.OrderBy(user => user.UserName).ToList());
         }
 
         // GET: Users/Details/5
@@ -50,6 +54,12 @@ namespace InventoryManagement.Controllers
         {
             if (ModelState.IsValid)
             {
+                var existingUser = db.Users.Where(user => user.UserName == users.UserName);
+                if (existingUser.ToList().Count > 0)
+                {
+                    ModelState.AddModelError("", "User Name already exists");
+                    return View(users);
+                }
                 db.Users.Add(users);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -110,6 +120,18 @@ namespace InventoryManagement.Controllers
         public ActionResult DeleteConfirmed(string id)
         {
             Users users = db.Users.Find(id);
+            if (users == null)
+                return RedirectToAction("Index");
+
+            if (users.isAdmin)
+            {
+                int numAdmins = db.Users.Where(user => user.isAdmin).ToList().Count;
+                if(numAdmins == 1)
+                {
+                    TempData["error"] = "Must Have at least 1 administrator user";
+                    return RedirectToAction("Index");
+                }
+            }
             db.Users.Remove(users);
             db.SaveChanges();
             return RedirectToAction("Index");
