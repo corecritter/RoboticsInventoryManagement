@@ -20,7 +20,7 @@ namespace InventoryManagement.Controllers
         // GET: Bundles
         public ActionResult Index()
         {
-            return View(db.Bundles.ToList());
+            return View(db.Bundles.ToList().OrderBy(bundle => bundle.BundleName));
         }
 
         // GET: Bundles/Details/5

@@ -236,7 +236,6 @@
     <Content Include="Images\background.jpg" />
     <Content Include="Images\background2.jpg" />
     <Content Include="Images\logo.png" />
-    <Content Include="Images\WShsIJl.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\emuinvmanage.pubxml" />
@@ -297,7 +296,7 @@
     <Content Include="Views\CheckIn\Index.cshtml" />
     <Content Include="Views\CheckOut\Index.cshtml" />
     <Content Include="Views\CheckOut\CheckOut.cshtml" />
-    <Content Include="Views\Shared\No Access.cshtml" />
+    <Content Include="Views\Shared\NoAccess.cshtml" />
     <Content Include="Views\Bundles\Create.cshtml" />
     <Content Include="Views\Bundles\Delete.cshtml" />
     <Content Include="Views\Bundles\Details.cshtml" />
@@ -310,6 +309,7 @@
     <Content Include="Views\CheckIn\InventoryReturnReminder.cshtml" />
     <Content Include="Views\ItemStatus\Index.cshtml" />
     <Content Include="Views\Bundles\ItemQuantitySelect.cshtml" />
+    <Content Include="Views\CheckOut\QuantitySelect.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

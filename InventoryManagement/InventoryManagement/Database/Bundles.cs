@@ -10,7 +10,7 @@ namespace InventoryManagement.Database
     {
         [Key]
         public int BundleId { get; set; } //PK
-        [Required(ErrorMessage = "A Package Name is Required")]
+        [Required(ErrorMessage = "A Package Name is Required"), Display(Name ="Bundle Name")]
         public string BundleName { get; set; }
         public int SchoolId { get; set; }
         public virtual Schools School { get; set; }

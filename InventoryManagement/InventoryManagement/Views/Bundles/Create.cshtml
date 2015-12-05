@@ -14,12 +14,12 @@
         <h4>Bundles</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.BundleName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.LabelFor(model => model.BundleName, htmlAttributes: new { @class = "control-label col-md-2" })
+            </div>
+            <div class="col-sm-4">
                 @Html.EditorFor(model => model.BundleName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.BundleName, "", new { @class = "text-danger" })
             </div>
         </div>
         <h3>Select Schools to create a package bundle for</h3>
@@ -27,20 +27,20 @@
             @for (int i = 0; i < Model.SchoolsCheckboxes.Count; i++)
             {
                 @Html.HiddenFor(model => model.Schools[i].SchoolId)
-                <div class="form-group">
-                    <label class="control-label col-md-2">@Html.DisplayFor(model => Model.Schools[i].SchoolName)</label>
-                    <div class="col-md-10">
+                <div class="row">
+                    <div class="col-sm-2">
+                        @Html.DisplayName(Model.Schools[i].SchoolName)
+                    </div>
+                    <div class="col-sm-4">
                         @Html.CheckBoxFor(model => model.SchoolsCheckboxes[i], htmlAttributes: new { @class = "form-control" })
                     </div>
                 </div>
             }
-       
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" value="Continue" class="btn btn-default" />
                 </div>
             </div>
-        
     </div>
 }
 

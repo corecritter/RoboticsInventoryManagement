@@ -28,7 +28,12 @@ namespace InventoryManagement.Models
         public IList<bool> ItemTypesCheckboxes { get; set; }
         public IList<int> SelectedItemTypesIds { get; set; }
 
+        //For QuantitySelectView
+        public IList<int> ItemQuantityFields { get; set; }
+        public IList<ItemTypes> SelectedItemTypesModel { get; set; }
+
         //For ItemsSelect View
+        [Required(ErrorMessage ="Quantity must be at least 1"), Range(1, int.MaxValue)]
         public IList<Items> ItemsToCheckOut { get; set; }
     }
 }
