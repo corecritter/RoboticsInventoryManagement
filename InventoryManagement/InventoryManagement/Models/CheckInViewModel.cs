@@ -12,4 +12,26 @@ namespace InventoryManagement.Models
         public IList<Items> RentedItems { get; set; }
         public IList<bool> RentedItemsCheckboxes { get; set; }
     }
+    public class CheckInItemTypeSelectViewModel
+    {
+        //For ItemTypesSelectView
+        public IList<ItemTypes> ItemTypesModel { get; set; }
+        public IList<bool> ItemTypesCheckboxes { get; set; }
+        public int SelectedSchoolId { get; set; }
+    }
+    public class CheckInQuantitySelectViewModel
+    {
+        public IList<int> ItemQuantityFields { get; set; }
+        public IList<ItemTypes> SelectedItemTypesModel { get; set; }
+        public int SelectedSchoolId { get; set; }
+    }
+    public class CheckInItemConfirmModel
+    {
+        public IList<Items> ItemsToReturn = new List<Items>();
+        public IList<string> ItemDisplayString = new List<string>();
+        public IList<string> ItemDisplayLabels = new List<string>();
+        public int SelectedSchoolId { get; set; }
+    }
+
+
 }

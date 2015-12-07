@@ -19,6 +19,10 @@ namespace InventoryManagement.Controllers
         //Display All Schools to Check In/ Check Out
         public ActionResult Index()
         {
+            if (TempData["error"] != null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
             CheckOutViewModel vm = new CheckOutViewModel { Schools = db.Schools.ToList() };
             return View(vm);
         }
@@ -112,6 +116,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ItemTypesSubmit(CheckOutViewModel vm)
         {
+            if (vm == null)
+                return RedirectToAction("Index");
             IList<int> quantityFields = new List<int>();
             IList<ItemTypes> selectedItemTypes = new List<ItemTypes>();
 
@@ -175,12 +181,15 @@ namespace InventoryManagement.Controllers
 
                 var availableItems = potentialItems.ToList();
                 if (availableItems.Count >= quantity)
-                    for(int i=0; i< quantity; i++)
+                    for (int i = 0; i < quantity; i++)
                     {
                         itemsToCheckOut.Add(availableItems[i]);
                     }
-                else //Not enough Items to match requested quantity
+                else
+                { //Not enough Items to match requested quantity
+                    TempData["error"] = "Not anough " + currItemType.ItemName + "s available";
                     return RedirectToAction("Index");
+                }
                 currItemTypeIndex++;
             }
             vm.ItemsToCheckOut = itemsToCheckOut;

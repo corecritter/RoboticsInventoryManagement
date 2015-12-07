@@ -24,6 +24,7 @@ namespace InventoryManagement.Models
     {
         public List<ItemTypes> ItemTypesModel { get; set; }
         public IList<int> ItemQuantities { get; set; }
+
     }
 
     public class ItemTypesQuantityModel

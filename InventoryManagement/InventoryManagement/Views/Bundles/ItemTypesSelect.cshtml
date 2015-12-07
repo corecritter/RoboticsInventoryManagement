@@ -9,25 +9,24 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <div class=""form-horizontal">
         @Html.HiddenFor(model => model.BundleName)
-        @for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
+        for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
         {
             @Html.HiddenFor(model => model.SelectedSchoolIds[i])
         }
-        @for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
+        for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
         {
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
             @Html.HiddenFor(model => model.ItemTypes[i].ItemName)
-            <div class="form-group">
-                <label class="control-label col-md-2">@Html.DisplayFor(model => Model.ItemTypes[i].ItemName)</label>
-                <div class="col-md-10">
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
+                </div>
+                <div class="col-sm-4">
                     @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i], htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
         }
-    </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Continue" class="btn btn-default" />

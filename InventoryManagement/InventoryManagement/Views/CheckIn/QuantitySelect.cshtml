@@ -1,0 +1,30 @@
+﻿@model InventoryManagement.Models.CheckInQuantitySelectViewModel
+@{
+    ViewBag.Title = "QuantitySelect";
+}
+
+<h2>Item Quantity Select</h2>
+
+@using (Html.BeginForm("QuantitySubmit", "CheckIn", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.SelectedSchoolId)
+    for (int i = 0; i < Model.ItemQuantityFields.Count; i++)
+    {
+        @Html.HiddenFor(model => model.SelectedItemTypesModel[i].ItemTypeId)
+        <div class="form-group">
+            <label class="control-label col-md-2">@Html.DisplayFor(model => model.SelectedItemTypesModel[i].ItemName)</label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ItemQuantityFields[i])
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Continue" class="btn btn-default" />
+        </div>
+    </div>
+
+}
+
