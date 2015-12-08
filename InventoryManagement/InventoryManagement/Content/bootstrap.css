@@ -340,13 +340,13 @@ textarea {
 }
 
 a {
-  color: #42a53e;
+  color: #13710f;
   text-decoration: none;
 }
 
 a:hover,
 a:focus {
-  color: #fcf8e3;
+  color: #4ab745;
   text-decoration: underline;
 }
 
