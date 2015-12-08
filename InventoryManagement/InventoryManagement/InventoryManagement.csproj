@@ -176,6 +176,7 @@
     <Compile Include="Controllers\CheckOutController.cs" />
     <Compile Include="Controllers\InventoryReturnController.cs" />
     <Compile Include="Controllers\ItemStatusController.cs" />
+    <Compile Include="Controllers\SchoolItemsController.cs" />
     <Compile Include="Models\CheckInViewModel.cs" />
     <Compile Include="Models\CheckOutViewModel.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Models\ItemTypesViewModel.cs" />
     <Compile Include="Models\LoginViewModel.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\SchoolsItemsIndexViewModel.cs" />
     <Compile Include="Models\SchoolsViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -302,6 +304,8 @@
     <Content Include="Views\ItemStatus\NoInventoryLocation.cshtml" />
     <Content Include="Views\ItemStatus\ItemsOut.cshtml" />
     <Content Include="Views\ItemStatus\ItemApproval.cshtml" />
+    <Content Include="Views\SchoolItems\Index.cshtml" />
+    <Content Include="Views\SchoolItems\ViewItems.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
