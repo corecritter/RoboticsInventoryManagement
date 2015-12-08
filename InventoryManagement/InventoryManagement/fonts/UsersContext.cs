@@ -21,5 +21,6 @@ namespace InventoryManagement.Database
             }
         }
         public DbSet<Users> Users { get; set; } //Entity for users
+        public DbSet<Items> Items { get; set; }
     }
 }

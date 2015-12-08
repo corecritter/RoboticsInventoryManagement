@@ -16,8 +16,10 @@ namespace InventoryManagement.Controllers
         {
             if(Session["LoggedUserId"] == null)
                 return RedirectToAction("Index", new { Controller = "Login", Action = "Index" });
-            var itemsToReturn = GetItemsToReturn((string)Session["LoggedUserId"]);
+            string userName = (string)Session["LoggedUserId"];
+            var itemsToReturn = GetItemsToReturn(userName);
             IList<ItemTypes> itemTypesToReturn = new List<ItemTypes>();
+            IList<InventoryLocations> inventoryLocations = new List<InventoryLocations>();
             IList<string> itemDisplayString = new List<string>();
             IList<string> itemDisplayInventoryLocation = new List<string>();
             IList<string> itemDisplayLabel = new List<string>();
@@ -28,77 +30,62 @@ namespace InventoryManagement.Controllers
             {
                 var currItemType = db.ItemTypes.Find(itemsToReturn[i].ItemTypeId);
                 if (currItemType == null)
-                    return null;
+                    return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
                 int index = itemTypesToReturn.IndexOf(currItemType);
                 if (index == -1)
                 {
                     itemTypesToReturn.Add(currItemType);
-                    var itemsOfType = itemsToReturn.Where(item => item.ItemTypeId == currItemType.ItemTypeId).ToList();
-                    int currInventoryLocationId = (int)itemsToReturn[i].InventoryLocationId;
-                    int? currLabelId = itemsToReturn[i].LabelId;
-                    int currCount = 0;
+                    var byLocation = itemsToReturn.Where(item => item.ItemTypeId == currItemType.ItemTypeId).ToList();
+                    //var byLocation = itemsOfType.OrderBy(item => item.InventoryLocation.InventoryLocationName).ToList();
+
+                    //var byLabel = itemsOfType.OrderBy(item => item.Label.LabelName);
+                    var currLocation = byLocation[0].InventoryLocation;
+                    int prevIndex = 0;
                     int currIndex = 0;
-                    foreach(var item in itemsOfType)
+                    
+                    while(currIndex < byLocation.Count)
                     {
-                        currCount++;
-                        //Inventory Location Match, Label doesn't match
-                        if (item.InventoryLocationId == currInventoryLocationId && item.LabelId != currLabelId)
+                        //currCount++;
+                        if(currLocation.InventoryLocationId != byLocation[currIndex].InventoryLocationId || currIndex == byLocation.Count-1)
                         {
-                            itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
-                            if (currLabelId != null)
-                                itemDisplayLabel.Add(db.Labels.Find(currLabelId).LabelName);
-                            else
-                                itemDisplayLabel.Add("(No Label)");
+                            int currCount = 0;
+                            IList<Items> currSet = new List<Items>();
+                            for(int j= prevIndex; j<=currIndex; j++)
+                            {
+                                currSet.Add(byLocation[j]);
+                            }
                             
-                            itemDisplayInventoryLocation.Add(db.InventoryLocations.Find(currInventoryLocationId).InventoryLocationName);
-                            returnItemCheckBoxes.Add(false);
-                            returnItemQuantities.Add(currCount);
-                            currLabelId = item.LabelId;
-                            currCount = 0;
-                        }
-                        //Inventory Location doesn't match, label matches
-                        else if (item.InventoryLocationId != currInventoryLocationId && item.LabelId == currLabelId)
-                        {
-                            itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
-                            if (currLabelId != null)
-                                itemDisplayLabel.Add(db.Labels.Find(currLabelId).LabelName);
+                            if (currItemType.HasLabel)
+                            {
+                                //currSet.OrderBy(item => item.LabelId);
+                                var currLabel = currSet[0].Label;
+                                for (int j = 0; j < currSet.Count; j++)
+                                {
+                                    currCount++;
+                                    if (currLabel.LabelId != currSet[j].LabelId || j == currSet.Count - 1)
+                                    {
+                                        itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
+                                        itemDisplayLabel.Add(db.Labels.Find(currLabel.LabelId).LabelName);
+                                        returnItemQuantities.Add(currCount);
+                                        returnItemCheckBoxes.Add(false);
+                                        currLabel = currSet[j].Label;
+                                        currCount = 0;
+                                    }
+                                }
+                            }
                             else
+                            {
+                                itemDisplayString.Add(currSet.Count + " x " + currItemType.ItemName);
                                 itemDisplayLabel.Add("(No Label)");
+                                returnItemQuantities.Add(currSet.Count);
+                                returnItemCheckBoxes.Add(false);
+                            }
                             
-                            itemDisplayInventoryLocation.Add(db.InventoryLocations.Find(currInventoryLocationId).InventoryLocationName);
-                            returnItemCheckBoxes.Add(false);
-                            returnItemQuantities.Add(currCount);
-                            currInventoryLocationId = (int)item.InventoryLocationId;
-                            currCount = 0;
-                        }
-                        //Inventory Location and Label Don't match
-                        else if (item.InventoryLocationId != currInventoryLocationId && item.LabelId != currLabelId)
-                        {
-                            itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
-                            if (currLabelId != null)
-                                itemDisplayLabel.Add(db.Labels.Find(currLabelId).LabelName);
-                            else
-                                itemDisplayLabel.Add("(No Label)");
-                            
-                            itemDisplayInventoryLocation.Add(db.InventoryLocations.Find(currInventoryLocationId).InventoryLocationName);
-                            returnItemCheckBoxes.Add(false);
-                            returnItemQuantities.Add(currCount);
-                            currInventoryLocationId = (int)item.InventoryLocationId;
-                            currLabelId = item.LabelId;
-                            currCount = 0;
+                            itemDisplayInventoryLocation.Add(currLocation.InventoryLocationName);
+                            currLocation = byLocation[currIndex].InventoryLocation;
+                            prevIndex = currIndex+1;
                         }
                         currIndex++;
-                    }
-                    if (currCount > 0)
-                    {
-                        itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
-                        if (currLabelId != null)
-                            itemDisplayLabel.Add(db.Labels.Find(currLabelId).LabelName);
-                        else
-                            itemDisplayLabel.Add("(No Label)");
-                        itemDisplayInventoryLocation.Add(db.InventoryLocations.Find(currInventoryLocationId).InventoryLocationName);
-                        returnItemCheckBoxes.Add(false);
-                        returnItemQuantities.Add(currCount);
                     }
                 }
             }
@@ -118,7 +105,7 @@ namespace InventoryManagement.Controllers
         {
             var itemsToReturn = db.Items.Where(item => item.CheckedInById == userName);
             itemsToReturn = itemsToReturn.Where(item => item.IsReturned == false);
-            return (itemsToReturn.OrderBy(item => item.ItemType.ItemName).ToList());
+            return (itemsToReturn.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.InventoryLocation.InventoryLocationName).ThenBy(item => item.Label.LabelName).ToList());
         }
         public ActionResult ReturnItems(InventoryReturnIndexViewModel vm)
         {

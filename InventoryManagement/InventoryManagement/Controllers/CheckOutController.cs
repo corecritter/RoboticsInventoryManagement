@@ -164,10 +164,17 @@ namespace InventoryManagement.Controllers
             if (selectedSchool == null)
                 return RedirectToAction("Index");
             IList <Items> itemsToCheckOut = new List<Items>();
+            IList<string> itemDisplayString = new List<string>();
+            IList<string> itemDisplayLabels = new List<string>();
+
             int currItemTypeIndex = 0;
             foreach (int quantity in vm.ItemQuantityFields)
             {
-                //if(quantity < 0)
+                if(quantity <= 0)
+                {
+                    TempData["error"] = "Quantity must be at least 1";
+                    return RedirectToAction("Index");
+                }
                 var currItemType = db.ItemTypes.Find(vm.SelectedItemTypesModel[currItemTypeIndex].ItemTypeId);
                 if (currItemType == null)
                     return RedirectToAction("Index");
@@ -179,12 +186,19 @@ namespace InventoryManagement.Controllers
                 if (currItemType.HasLabel) //Only filter by label if the Item Type has labels
                     potentialItems = potentialItems.Where(item => item.LabelId == selectedSchool.LabelId);
 
-                var availableItems = potentialItems.ToList();
+                var availableItems = potentialItems.OrderBy(item => item.ItemType.ItemName).ToList();
                 if (availableItems.Count >= quantity)
+                {
                     for (int i = 0; i < quantity; i++)
                     {
                         itemsToCheckOut.Add(availableItems[i]);
                     }
+                    itemDisplayString.Add(quantity + " x " + availableItems[0].ItemType.ItemName);
+                    if (currItemType.HasLabel)
+                        itemDisplayLabels.Add(availableItems[0].Label.LabelName);
+                    else
+                        itemDisplayLabels.Add("(No Label)");
+                }
                 else
                 { //Not enough Items to match requested quantity
                     TempData["error"] = "Not anough " + currItemType.ItemName + "s available";
@@ -193,6 +207,8 @@ namespace InventoryManagement.Controllers
                 currItemTypeIndex++;
             }
             vm.ItemsToCheckOut = itemsToCheckOut;
+            vm.ItemDisplayString = itemDisplayString;
+            vm.ItemDisplayLabels = itemDisplayLabels;
             TempData["CheckOutViewModel"] = vm;
             return RedirectToAction("ItemsSelect");
         }

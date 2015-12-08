@@ -42,7 +42,7 @@ namespace InventoryManagement.Controllers
             }
             else if (Session["LoggedUserId"] != null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
             }
             return RedirectToAction("Index");
         }
@@ -53,6 +53,7 @@ namespace InventoryManagement.Controllers
         public ActionResult LogOff()
         {
             Session["LoggedUserID"] = null;
+            Session["LoggedUserName"] = null;
             Session["isAdmin"] = null;
             return RedirectToAction("Index", "Home");
         }

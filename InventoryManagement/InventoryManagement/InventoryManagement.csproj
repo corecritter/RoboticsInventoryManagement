@@ -201,7 +201,7 @@
     <Compile Include="Database\Schools.cs" />
     <Compile Include="Database\SchoolsContext.cs" />
     <Compile Include="Database\Users.cs" />
-    <Compile Include="Database\UsersContext.cs" />
+    <Compile Include="fonts\UsersContext.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

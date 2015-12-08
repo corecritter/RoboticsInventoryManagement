@@ -245,6 +245,16 @@ namespace InventoryManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             ItemTypes itemTypes = db.ItemTypes.Find(id);
+            if (itemTypes == null)
+                return RedirectToAction("Index");
+            for(int i=0; i< itemTypes.Item.Count; i++)
+            {
+                var item = db.Items.Find(itemTypes.Item[i].ItemId);
+                if (item == null)
+                    return RedirectToAction("Index");
+                db.Items.Remove(item);
+                db.SaveChanges();
+            }
             db.ItemTypes.Remove(itemTypes);
             db.SaveChanges();
             return RedirectToAction("Index");

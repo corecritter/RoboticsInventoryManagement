@@ -110,6 +110,56 @@ namespace InventoryManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Labels labels = db.Labels.Find(id);
+            if (labels == null)
+                return RedirectToAction("Index");
+            var associatedSchools = db.Schools.Where(school => school.LabelId == id).ToList();
+            var associatedItems = db.Items.Where(item => item.LabelId == id).ToList();
+            var relatedBundles = db.Bundles.Where(bundle => bundle.SchoolId == id).ToList();
+            for(int i=0; i< associatedSchools.Count; i++)
+            {
+                var school = db.Schools.Find(associatedSchools[i].SchoolId);
+                if(school==null)
+                    return RedirectToAction("Index");
+                var relatedItems = db.Items.Where(item => item.CheckedOutSchoolId == school.SchoolId).ToList();
+                for(int j=0; j< relatedItems.Count; j++)
+                {
+                    relatedItems[i].CheckedOutSchoolId = null;
+                    db.Entry(relatedItems[i]).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+            }
+            for (int i = 0; i < relatedBundles.Count; i++)
+            {
+                var bundle = db.Bundles.Find(relatedBundles[i].BundleId);
+                if (bundle == null)
+                    return RedirectToAction("Index");
+                var relatedItems = db.Items.Where(item => item.BundleId == bundle.BundleId).ToList();
+                for (int j = 0; j < relatedItems.Count; j++)
+                {
+                    relatedItems[i].BundleId = null;
+                    db.Entry(relatedItems[i]).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                db.Bundles.Remove(bundle);
+                db.SaveChanges();
+            }
+            for (int i = 0; i < associatedItems.Count; i++)
+            {
+                var item = db.Items.Find(associatedItems[i].ItemId);
+                if(item==null)
+                    return RedirectToAction("Index");
+                associatedItems[i].LabelId = null;
+                db.Entry(associatedItems[i]).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            for (int i = 0; i < associatedSchools.Count; i++)
+            {
+                var school = db.Schools.Find(associatedSchools[i].SchoolId);
+                if (school == null)
+                    return RedirectToAction("Index");
+                db.Schools.Remove(school);
+                db.SaveChanges();
+            }
             db.Labels.Remove(labels);
             db.SaveChanges();
             return RedirectToAction("Index");

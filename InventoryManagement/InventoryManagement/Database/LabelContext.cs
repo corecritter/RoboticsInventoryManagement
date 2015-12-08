@@ -10,5 +10,8 @@ namespace InventoryManagement.Database
     public class LabelContext : DbContext
     {
         public DbSet<Labels> Labels { get; set; }
+        public DbSet<Schools> Schools { get; set; }
+        public DbSet<Bundles> Bundles { get; set; }
+        public DbSet<Items> Items { get; set; }
     }
 }

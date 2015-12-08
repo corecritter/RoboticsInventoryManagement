@@ -132,6 +132,27 @@ namespace InventoryManagement.Controllers
                     return RedirectToAction("Index");
                 }
             }
+            var associatedItemsOut = db.Items.Where(item => item.CheckedOutById == users.UserName).ToList();
+            var associatedItemsIn = db.Items.Where(item => item.CheckedInById == users.UserName).ToList();
+            for(int i=0; i<associatedItemsOut.Count; i++)
+            {
+                var item = db.Items.Find(associatedItemsOut[i].ItemId);
+                if(item==null)
+                    return RedirectToAction("Index");
+                item.CheckedOutById = null;
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            for (int i = 0; i < associatedItemsIn.Count; i++)
+            {
+                var item = db.Items.Find(associatedItemsIn[i].ItemId);
+                if (item == null)
+                    return RedirectToAction("Index");
+                item.IsReturned = false;
+                item.CheckedInById = null;
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
+            }
             db.Users.Remove(users);
             db.SaveChanges();
             return RedirectToAction("Index");

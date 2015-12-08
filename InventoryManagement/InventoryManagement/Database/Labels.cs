@@ -10,6 +10,7 @@ namespace InventoryManagement.Database
     {
         [Key]
         public int LabelId { get; set; }
+        [Display(Name = "Label Name")]
         public string LabelName { get; set; }
 
         public virtual List<Items> Items { get; set; }

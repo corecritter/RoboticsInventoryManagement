@@ -274,6 +274,17 @@ namespace InventoryManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Bundles bundles = db.Bundles.Find(id);
+            if(bundles==null)
+                return RedirectToAction("Index");
+            var associatedItems = db.Items.Where(item => item.BundleId == id).ToList();
+            for(int i=0; i< associatedItems.Count; i++)
+            {
+                var item = db.Items.Find(associatedItems[i].ItemId);
+                if(item==null)
+                    return RedirectToAction("Index");
+                db.Items.Remove(item);
+                db.SaveChanges();
+            }
             db.Bundles.Remove(bundles);
             db.SaveChanges();
             return RedirectToAction("Index");

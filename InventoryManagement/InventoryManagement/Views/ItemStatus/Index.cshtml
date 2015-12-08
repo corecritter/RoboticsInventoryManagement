@@ -2,6 +2,7 @@
     ViewBag.Title = "Index";
 }
 <table class="table">
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <tr>
         <td>
             @Html.ActionLink("Items Missing a Label", "NoLabel")

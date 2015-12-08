@@ -14,13 +14,18 @@ namespace InventoryManagement.Database
         [Required(ErrorMessage = "User Name is Required and must be unique")]
         public string UserName { get; set; }
 
+        [Display(Name = "First Name")]
         public string FirstName { get; set; }
+        [Display(Name = "Last name")]
         public string LastName { get; set; }
+        [DataType(DataType.EmailAddress), Display(Name = "Email Address")]
         public string Email { get; set; }
         [Required(ErrorMessage ="A Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-        public int PhoneNumber { get; set; }
+        [DataType(DataType.PhoneNumber), Display(Name = "Phone Number")]
+        public int? PhoneNumber { get; set; }
+        [Display(Name = "Administrator")]
         public bool isAdmin { get; set; }
     }
 }

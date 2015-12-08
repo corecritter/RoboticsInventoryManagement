@@ -14,35 +14,47 @@
 <body>
     @if (Session["LoggedUserID"] != null)
     {
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-logo" })
+            <div class="navbar navbar-inverse navbar-fixed-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-logo" })
+                    </div>
+                    <div class="navbar-collapse collapse">
+                        <ul class="nav navbar-nav">
+                            @if ((bool)Session["isAdmin"])
+                            {
+
+                                @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
+                                <li>@Html.ActionLink("Items", "Index", "ItemTypes")</li>
+                                <li>@Html.ActionLink("Labels", "Index", "Labels")</li>
+                                <li>@Html.ActionLink("Inventory Locations", "Index", "InventoryLocations")</li>
+                                <li>@Html.ActionLink("Schools", "Index", "Schools")</li>
+                                <li>@Html.ActionLink("Users", "Index", "Users")</li>
+                                <li>@Html.ActionLink("Item Status", "Index", "ItemStatus")</li>
+                                <li>@Html.ActionLink("Check In/Out", "Index", "CheckOut")</li>
+                                <li>@Html.ActionLink("Item Return", "Index", "InventoryReturn")</li>
+                                <li>@Html.Partial("_LoginPartial")</li>
+
+                            }
+                            else
+                            {
+                                <li>@Html.ActionLink("Check In/Out", "Index", "CheckOut")</li>
+                                <li>@Html.ActionLink("Item Return", "Index", "InventoryReturn")</li>
+                                <li>@Html.Partial("_LoginPartial")</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    @*<li>@Html.ActionLink("Home", "Index", "Home")</li>*@
-                    <li>@Html.ActionLink("Items", "Index", "ItemTypes")</li>
-                    <li>@Html.ActionLink("Labels", "Index", "Labels")</li>
-                    <li>@Html.ActionLink("Inventory Locations", "Index", "InventoryLocations")</li>
-                    <li>@Html.ActionLink("Schools", "Index", "Schools")</li>
-                    <li>@Html.ActionLink("Users", "Index", "Users")</li>
-                    <li>@Html.ActionLink("Item Status", "Index", "ItemStatus")</li>
-                    <li>@Html.ActionLink("Check In/Out", "Index", "CheckOut")</li>
-                    <li>@Html.ActionLink("Item Return", "Index", "InventoryReturn")</li>
-                    <li>@Html.Partial("_LoginPartial")</li>
-                </ul>
-                
-            </div>
-        </div>
-    </div>
     }
-    else {
+    else
+    {
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">

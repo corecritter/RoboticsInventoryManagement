@@ -25,6 +25,11 @@ namespace InventoryManagement.Controllers
         {
             var noLabelItems = db.Items.Where(item => item.ItemType.HasLabel);
             noLabelItems = noLabelItems.Where(item => item.LabelId == null).OrderBy(item => item.ItemType.ItemName);
+            if (noLabelItems.ToList().Count == 0)
+            {
+                TempData["error"] = "No Items Exist Without a Label";
+                return RedirectToAction("Index");
+            }
             IList<SelectListItem> labels = db.Labels.Select(x => new SelectListItem
             {
                 Text = x.LabelName,
@@ -70,6 +75,11 @@ namespace InventoryManagement.Controllers
         public ActionResult NoInventoryLocation()
         {
             var noInventoryLocationItems = db.Items.Where(item => item.InventoryLocationId == null);
+            if (noInventoryLocationItems.ToList().Count == 0)
+            {
+                TempData["error"] = "No Items Exist Without an Inventory Location";
+                return RedirectToAction("Index");
+            }
             IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
                 Text = x.InventoryLocationName,
@@ -116,6 +126,11 @@ namespace InventoryManagement.Controllers
         {
             var allItems = db.Items.Where(item => item.CheckedOutById != null);         //Items checked out or returned
             var checkedOutItems = allItems.Where(item => item.CheckedInById == null).OrderBy(item => item.ItemType.ItemName);  //Items checked out
+            if (checkedOutItems.ToList().Count == 0)
+            {
+                TempData["error"] = "No Items Currently Checked Out";
+                return RedirectToAction("Index");
+            }
             IList<bool> lostItems = new List<bool>();
             foreach (var item in checkedOutItems)
                 lostItems.Add(false);
@@ -152,6 +167,11 @@ namespace InventoryManagement.Controllers
         {
             var allItems = db.Items.Where(item => item.CheckedOutById != null);         //Items checked out or returned
             var pendingApprovalItems = allItems.Where(item => item.CheckedInById != null); //Items checked out and in
+            if (pendingApprovalItems.ToList().Count == 0)
+            {
+                TempData["error"] = "No Items Currently Pending Approval";
+                return RedirectToAction("Index");
+            }
             IList<bool> approveItems = new List<bool>();
             foreach (var item in pendingApprovalItems)
                 approveItems.Add(true);
@@ -167,6 +187,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ApproveItems(ItemsApproveViewModel vm)
         {
+            if (vm == null)
+                return RedirectToAction("Index");
             int index = 0;
             foreach (bool isChecked in vm.ApproveCheckBoxes)
             {

@@ -35,5 +35,7 @@ namespace InventoryManagement.Models
         //For ItemsSelect View
         [Required(ErrorMessage ="Quantity must be at least 1"), Range(1, int.MaxValue)]
         public IList<Items> ItemsToCheckOut { get; set; }
+        public IList<string> ItemDisplayString { get; set; }
+        public IList<string> ItemDisplayLabels { get; set; }
     }
 }

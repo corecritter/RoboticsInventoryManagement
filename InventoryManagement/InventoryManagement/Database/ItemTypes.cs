@@ -10,7 +10,7 @@ namespace InventoryManagement.Database
     {
         [Key]
         public int ItemTypeId { get; set; } //PK
-        [Required]
+        [Required, Display(Name = "Name")]
         public string ItemName { get; set; }
         [Display(Name = "Use Item Labels")]
         public bool HasLabel { get; set; }
