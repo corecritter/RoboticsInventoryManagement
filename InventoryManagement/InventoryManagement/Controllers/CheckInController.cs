@@ -48,22 +48,12 @@ namespace InventoryManagement.Controllers
                 SelectedSchoolId = result
             };
             return View(vm);
-            /*
-            IList<bool> rentedItemsCheckboxes = new List<bool>();
-            foreach (var item in rentedItems)
-                rentedItemsCheckboxes.Add(false);
-            CheckInViewModel vm = new CheckInViewModel
-            {
-                RentedItems = rentedItems,
-                RentedItemsCheckboxes = rentedItemsCheckboxes
-            };
-            return View(vm);
-            */
         }
         private IList<Items> getRentedItems(int id) {
             var school = db.Schools.Find(id);
-            var rentedItems = db.Items.Where(item => item.CheckedOutSchoolId == id).OrderBy(item => item.ItemType.ItemName).ToList();
-            return rentedItems;
+            var rentedItems = db.Items.Where(item => item.CheckedOutSchoolId == id);//.OrderBy(item => item.ItemType.ItemName);
+            var results = rentedItems.Where(item => item.CheckedInById == null).OrderBy(item => item.ItemType.ItemName).ToList();
+            return results;
         }
 
         public ActionResult ItemTypesSubmit(CheckInItemTypeSelectViewModel vm)
@@ -81,7 +71,9 @@ namespace InventoryManagement.Controllers
                     if (itemType == null)
                         return RedirectToAction("Index");
                     selectedItemTypes.Add(itemType);
-                    int numRented = db.Items.Where(item => item.CheckedOutSchoolId == vm.SelectedSchoolId).ToList().Count;
+                    var itemsRented = db.Items.Where(item => item.CheckedOutSchoolId == vm.SelectedSchoolId);
+                    itemsRented = itemsRented.Where(item => item.CheckedInById == null);
+                    int numRented = itemsRented.ToList().Count;
                     itemQuantities.Add(numRented);
                 }
                 index++;
@@ -172,7 +164,7 @@ namespace InventoryManagement.Controllers
             {
                 var item = db.Items.Find(vm.ItemsToReturn[i].ItemId);
                 if (item == null)
-                    return null;
+                    return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
                 if (item.CheckedInById != null)
                     return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
                 item.CheckedInById = userName;

@@ -27,9 +27,9 @@ namespace InventoryManagement.Models
     }
     public class CheckInItemConfirmModel
     {
-        public IList<Items> ItemsToReturn = new List<Items>();
-        public IList<string> ItemDisplayString = new List<string>();
-        public IList<string> ItemDisplayLabels = new List<string>();
+        public IList<Items> ItemsToReturn { get; set; }
+        public IList<string> ItemDisplayString { get; set; }
+        public IList<string> ItemDisplayLabels { get; set; }
         public int SelectedSchoolId { get; set; }
     }
 

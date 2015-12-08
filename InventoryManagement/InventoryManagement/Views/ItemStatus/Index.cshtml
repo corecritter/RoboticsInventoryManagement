@@ -1,87 +1,25 @@
-﻿@model InventoryManagement.Models.ItemStatusViewModel
-@{
+﻿@{
     ViewBag.Title = "Index";
 }
-
-<h2>Items Currently Checked Out</h2>
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <table>
-        <tr>
-            <td>
-                Item Name
-            </td>
-            <td>
-                Label
-            </td>
-            <td>
-                School
-            </td>
-        </tr>
-        @for (int i = 0; i < Model.CheckedOutItems.Count; i++)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.CheckedOutItems[i].ItemType.ItemName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.CheckedOutItems[i].Label.LabelName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.CheckedOutItems[i].School.SchoolName)
-                </td>
-            </tr>
-
-        }
-    </table>
-}
-
-<h2>Items Checked In, Pending Administrator Approval</h2>
-@using (Html.BeginForm("SubmitItemTypes", "ItemStatus", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <table>
-        <tr>
-            <td>
-                Item Name
-            </td>
-            <td>
-                Label
-            </td>
-            <td>
-                Inventory Location
-            </td>
-            <td>
-                Checked Out By
-            </td>
-            <td>
-                Checked In By
-            </td>
-        </tr>
-        @for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => model.PendingApprovalItems[i].ItemType.ItemName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.PendingApprovalItems[i].Label.LabelName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.PendingApprovalItems[i].InventoryLocation.InventoryLocationName)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedOutById)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
-                </td>
-            </tr>
-
-        }
-    </table>
-}
-
+<table class="table">
+    <tr>
+        <td>
+            @Html.ActionLink("Items Missing a Label", "NoLabel")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.ActionLink("Items Missing an Inventory Location", "NoInventoryLocation")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.ActionLink("Items Checked Out", "ItemsOut")
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Html.ActionLink("Items Pending Approval", "ItemApproval")
+        </td>
+    </tr>
+</table>

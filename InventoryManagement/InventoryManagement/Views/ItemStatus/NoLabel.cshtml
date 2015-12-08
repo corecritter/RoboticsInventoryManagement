@@ -1,0 +1,38 @@
+﻿@model InventoryManagement.Models.ItemsMissingLabelViewModel
+@{
+    ViewBag.Title = "NoLabel";
+}
+
+<h2>Items Missing a Label</h2>
+@using (Html.BeginForm("SubmitLabels", "ItemStatus", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="row">
+        <div class="col-sm-2">
+            @Html.DisplayName("Item Name")
+        </div>
+        <div class="col-sm-4">
+            @Html.DisplayName("Label")
+        </div>
+    </div>
+    for (int i = 0; i < Model.ItemsMissingLabel.Count; i++)
+    {
+        @Html.HiddenFor(model => model.ItemsMissingLabel[i].ItemId)
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DisplayFor(model => model.ItemsMissingLabel[i].ItemType.ItemName)
+            </div>
+            <div class="col-sm-4">
+                @Html.DropDownListFor(model => model.ItemsMissingLabel[i].LabelId, Model.Labels[i])
+            </div>
+        </div>
+    }
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+}
+

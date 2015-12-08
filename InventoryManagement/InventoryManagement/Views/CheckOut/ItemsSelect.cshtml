@@ -28,7 +28,7 @@
             @if (Model.ItemsToCheckOut[i].ItemType.HasLabel)
             {
                 <div class="col-sm-4">
-                    @Html.DisplayName(Model.ItemsToCheckOut[i].Label.LabelName)
+                    @Html.DisplayFor(model => model.ItemsToCheckOut[i].Label.LabelName)
                 </div>
             }
         </div>

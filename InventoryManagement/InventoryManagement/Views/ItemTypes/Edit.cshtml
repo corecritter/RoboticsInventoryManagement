@@ -16,7 +16,7 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.ItemTypeModel.ItemTypeId)
-
+        @Html.HiddenFor(model => model.ItemTypeModel.HasLabel)
         <div class="row">
             <div class="col-sm-2"> 
                 @Html.LabelFor(model => model.ItemTypeModel.ItemName)
