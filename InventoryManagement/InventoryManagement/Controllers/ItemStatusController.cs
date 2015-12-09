@@ -132,11 +132,19 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index");
             }
             IList<bool> lostItems = new List<bool>();
+            IList<string> schoolDisplayStrings = new List<string>();
             foreach (var item in checkedOutItems)
+            {
+                int checkedOutId = (int)item.CheckedOutSchoolId;
+                var school = db.Schools.Where(schoolMatch => schoolMatch.SchoolId == checkedOutId).ToList();
+                if (school.Count>0)
+                    schoolDisplayStrings.Add(school[0].SchoolName);
                 lostItems.Add(false);
+            }
             ItemsOutViewModel vm = new ItemsOutViewModel
             {
                 CheckedOutItems = checkedOutItems.ToList(),
+                SchoolDisplayStrings = schoolDisplayStrings,
                 ItemsLost = lostItems
             };
             return View(vm);
@@ -167,6 +175,7 @@ namespace InventoryManagement.Controllers
         {
             var allItems = db.Items.Where(item => item.CheckedOutById != null);         //Items checked out or returned
             var pendingApprovalItems = allItems.Where(item => item.CheckedInById != null); //Items checked out and in
+            pendingApprovalItems = pendingApprovalItems.Where(item => item.IsReturned == true);
             if (pendingApprovalItems.ToList().Count == 0)
             {
                 TempData["error"] = "No Items Currently Pending Approval";
@@ -177,7 +186,7 @@ namespace InventoryManagement.Controllers
                 approveItems.Add(true);
             ItemsApproveViewModel vm = new ItemsApproveViewModel
             {
-                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.ItemType.ItemName).ToList(),
+                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.Label.LabelName).ToList(),
                 ApproveCheckBoxes = approveItems
             };
             return View(vm);

@@ -72,6 +72,7 @@ namespace InventoryManagement.Controllers
                         return RedirectToAction("Index");
                     selectedItemTypes.Add(itemType);
                     var itemsRented = db.Items.Where(item => item.CheckedOutSchoolId == vm.SelectedSchoolId);
+                    itemsRented = itemsRented.Where(item => item.ItemTypeId == itemType.ItemTypeId);
                     itemsRented = itemsRented.Where(item => item.CheckedInById == null);
                     int numRented = itemsRented.ToList().Count;
                     itemQuantities.Add(numRented);

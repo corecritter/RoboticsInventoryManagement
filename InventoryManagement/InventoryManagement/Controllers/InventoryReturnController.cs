@@ -37,48 +37,46 @@ namespace InventoryManagement.Controllers
                 {
                     itemTypesToReturn.Add(currItemType);
                     var byLocation = itemsToReturn.Where(item => item.ItemTypeId == currItemType.ItemTypeId).OrderBy(item => item.InventoryLocation.InventoryLocationName).ToList();
-                    //for (int j = 0; j < byLocation.Count; j++)
-                        //sortedItemsToReturn.Add(byLocation[j]);
-                    //var byLocation = itemsOfType.OrderBy(item => item.InventoryLocation.InventoryLocationName).ToList();
-
-                    //var byLabel = itemsOfType.OrderBy(item => item.Label.LabelName);
                     var currLocation = byLocation[0].InventoryLocation;
                     int prevIndex = 0;
                     int currIndex = 0;
                     
                     while(currIndex < byLocation.Count)
                     {
-                        //currCount++;
                         if(currLocation.InventoryLocationId != byLocation[currIndex].InventoryLocationId || currIndex == byLocation.Count-1)
                         {
-                            int currCount = 0;
                             IList<Items> currSet = new List<Items>();
                             for(int j= prevIndex; j<currIndex; j++)
                             {
                                 currSet.Add(byLocation[j]);
-                                sortedItemsToReturn.Add(byLocation[j]);
+                                if (!currItemType.HasLabel)
+                                    sortedItemsToReturn.Add(byLocation[j]);
                             }
                             if(currIndex == byLocation.Count - 1)
                             {
                                 currSet.Add(byLocation[currIndex]);
-                                sortedItemsToReturn.Add(byLocation[currIndex]);
+                                if(!currItemType.HasLabel)
+                                    sortedItemsToReturn.Add(byLocation[currIndex]);
                             }
                             
                             if (currItemType.HasLabel)
                             {
-                                //currSet.OrderBy(item => item.LabelId);
+                                IList<Labels> visitedLabels = new List<Labels>();
                                 var currLabel = currSet[0].Label;
                                 for (int j = 0; j < currSet.Count; j++)
                                 {
-                                    currCount++;
-                                    if (currLabel.LabelId != currSet[j].LabelId || j == currSet.Count - 1)
+                                    if (visitedLabels.IndexOf(currSet[j].Label) == -1)
                                     {
-                                        itemDisplayString.Add(currCount + " x " + currItemType.ItemName);
-                                        itemDisplayLabel.Add(db.Labels.Find(currLabel.LabelId).LabelName);
-                                        returnItemQuantities.Add(currCount);
-                                        returnItemCheckBoxes.Add(false);
+                                        visitedLabels.Add(currSet[j].Label);
+                                        var labelsOfType = currSet.Where(item => item.Label.LabelId == currLabel.LabelId).ToList();
                                         currLabel = currSet[j].Label;
-                                        currCount = 0;
+                                        itemDisplayString.Add(labelsOfType.Count + " x " + currItemType.ItemName);
+                                        itemDisplayLabel.Add(db.Labels.Find(currLabel.LabelId).LabelName);
+                                        returnItemQuantities.Add(labelsOfType.Count);
+                                        foreach (var item in labelsOfType)
+                                            sortedItemsToReturn.Add(item);
+                                        returnItemCheckBoxes.Add(false);
+                                        itemDisplayInventoryLocation.Add(currLocation.InventoryLocationName);
                                     }
                                 }
                             }
@@ -88,9 +86,8 @@ namespace InventoryManagement.Controllers
                                 itemDisplayLabel.Add("(No Label)");
                                 returnItemQuantities.Add(currSet.Count);
                                 returnItemCheckBoxes.Add(false);
+                                itemDisplayInventoryLocation.Add(currLocation.InventoryLocationName);
                             }
-                            
-                            itemDisplayInventoryLocation.Add(currLocation.InventoryLocationName);
                             currLocation = byLocation[currIndex].InventoryLocation;
                             prevIndex = currIndex;
                         }

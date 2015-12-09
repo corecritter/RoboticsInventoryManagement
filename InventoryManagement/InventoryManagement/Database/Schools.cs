@@ -12,7 +12,8 @@ namespace InventoryManagement.Database
         [Key]
         public int SchoolId { get; set; } //PK
 
-        [Display(Name ="School Name"), Required(ErrorMessage = "A School Name is required")]
+        [Required(ErrorMessage = "A School Name is required")]
+        [Display(Name ="School Name")]
         public string SchoolName { get; set; }
 
         [Display(Name = "Teacher Name"), Required(ErrorMessage = "A Teacher Name is required")]

@@ -15,6 +15,7 @@ namespace InventoryManagement.Models
     public class ItemsOutViewModel
     {
         public IList<Items> CheckedOutItems { get; set; }
+        public IList<string> SchoolDisplayStrings { get; set; }
         public IList<bool> ItemsLost { get; set; }
         public IList<bool> ItemReturn { get; set; }
     }

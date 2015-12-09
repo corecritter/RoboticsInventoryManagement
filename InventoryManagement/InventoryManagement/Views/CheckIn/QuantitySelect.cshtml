@@ -13,9 +13,11 @@
     for (int i = 0; i < Model.ItemQuantityFields.Count; i++)
     {
         @Html.HiddenFor(model => model.SelectedItemTypesModel[i].ItemTypeId)
-        <div class="form-group">
-            <label class="control-label col-md-2">@Html.DisplayFor(model => model.SelectedItemTypesModel[i].ItemName)</label>
-            <div class="col-md-10">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.DisplayFor(model => model.SelectedItemTypesModel[i].ItemName)
+            </div>
+            <div class="col-sm-4">
                 @Html.EditorFor(model => model.ItemQuantityFields[i])
             </div>
         </div>

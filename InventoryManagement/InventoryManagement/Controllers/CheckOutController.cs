@@ -64,12 +64,34 @@ namespace InventoryManagement.Controllers
             var selectedBundle = db.Bundles.Find(bundleId);
             if (selectedBundle != null)
             {
+                IList<ItemTypes> itemTypesSelected = new List<ItemTypes>();
                 IList<Items> itemsToCheckOut = new List<Items>();
-                foreach (var item in selectedBundle.Items)
+                IList<string> itemDisplayString = new List<string>();
+                IList<string> itemDisplayLabels = new List<string>();
+                foreach (var bundleItem in selectedBundle.Items)
                 {
-                    itemsToCheckOut.Add(item);
+                    if (bundleItem.CheckedOutById != null)
+                    {
+                        TempData["error"] = "Bundle Already Checked Out";
+                        return RedirectToAction("Index");
+                    }
+                    if (itemTypesSelected.IndexOf(bundleItem.ItemType) == -1)
+                    {
+                        itemTypesSelected.Add(bundleItem.ItemType);
+                        var itemsOfType = selectedBundle.Items.Where(item => item.ItemTypeId == bundleItem.ItemTypeId).OrderBy(item => item.ItemType.ItemName).ToList();
+                        itemDisplayString.Add(itemsOfType.Count + " x " + bundleItem.ItemType.ItemName);
+                        if (bundleItem.ItemType.HasLabel)
+                            itemDisplayLabels.Add(bundleItem.Label.LabelName);
+                        else
+                            itemDisplayLabels.Add("(No Label)");
+                        foreach(var itemToCheckout in itemsOfType)
+                            itemsToCheckOut.Add(itemToCheckout);
+                    }
                 }
                 vm.ItemsToCheckOut = itemsToCheckOut;
+                vm.ItemDisplayString = itemDisplayString;
+                vm.ItemDisplayLabels = itemDisplayLabels;
+                vm.SelectedSchoolId = schoolId;
                 TempData["CheckOutViewModel"] = vm;
                 return RedirectToAction("ItemsSelect");
                 /*bool found;
@@ -163,7 +185,7 @@ namespace InventoryManagement.Controllers
             var selectedSchool = db.Schools.Find(vm.SelectedSchoolId);
             if (selectedSchool == null)
                 return RedirectToAction("Index");
-            IList <Items> itemsToCheckOut = new List<Items>();
+            IList<Items> itemsToCheckOut = new List<Items>();
             IList<string> itemDisplayString = new List<string>();
             IList<string> itemDisplayLabels = new List<string>();
 

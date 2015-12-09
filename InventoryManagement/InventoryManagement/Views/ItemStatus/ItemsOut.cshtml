@@ -39,10 +39,17 @@ using (Html.BeginForm("RemoveItems", "ItemStatus", FormMethod.Post))
                 @Html.DisplayFor(model => model.CheckedOutItems[i].ItemType.ItemName)
             </div>
             <div class="col-sm-2">
+                @if (Model.CheckedOutItems[i].ItemType.HasLabel)
+                {
                 @Html.DisplayFor(model => model.CheckedOutItems[i].Label.LabelName)
+                }
+                else
+                {
+                    @Html.DisplayName("(No Label)")
+                }
             </div>
             <div class="col-sm-2">
-                @Html.DisplayFor(model => model.CheckedOutItems[i].School.SchoolName)
+                @Html.DisplayFor(model => model.SchoolDisplayStrings[i])
             </div>
             <div class="col-sm-2">
                 @Html.CheckBoxFor(model => model.ItemsLost[i])
