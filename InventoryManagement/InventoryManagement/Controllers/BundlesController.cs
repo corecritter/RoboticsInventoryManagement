@@ -101,6 +101,11 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm!=null || vm.SchoolsCheckboxes!=null)
             {
+                if (vm.BundleName == null || vm.BundleName.Trim().Equals(""))
+                {
+                    TempData["error"] = "Bundle Must Have a name";
+                    return RedirectToAction("Index");
+                }
                 IList<int> checkedSchools = new List<int>();
                 var labels = db.Labels.ToList();
                 int numSelected = vm.SchoolsCheckboxes.Where(x => x).Count();

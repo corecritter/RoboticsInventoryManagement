@@ -10,7 +10,7 @@ namespace InventoryManagement.Database
     {
         protected override void Seed(UsersContext context)
         {
-            Users defaultUser = new Users { UserName = "admin", Password = "admin", isAdmin = true, Email = "a", FirstName = "a", LastName = "a", PhoneNumber = 2222222 };
+            Users defaultUser = new Users { UserName = "admin", Password = "admin", isAdmin = true, FirstName = "Default", LastName = "User", };
             context.Users.Add(defaultUser);
             context.SaveChanges();
         }

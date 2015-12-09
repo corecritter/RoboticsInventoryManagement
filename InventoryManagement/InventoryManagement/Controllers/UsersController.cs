@@ -169,8 +169,18 @@ namespace InventoryManagement.Controllers
                 db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
             }
+            string userName = (string)Session["LoggedUserId"];
+            bool logOff = false;
+            if (userName.Equals(users.UserName))
+                logOff = true;
             db.Users.Remove(users);
             db.SaveChanges();
+            if (logOff)
+            {
+                Session["LoggedUserName"] = null;
+                Session["LoggedUserId"] = null;
+                Session["isAdmin"] = null;
+            }
             return RedirectToAction("Index");
         }
 

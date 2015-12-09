@@ -24,7 +24,7 @@ namespace InventoryManagement.Database
         [DataType(DataType.Password)]
         public string Password { get; set; }
         [DataType(DataType.PhoneNumber), Display(Name = "Phone Number")]
-        public int? PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         [Display(Name = "Administrator")]
         public bool isAdmin { get; set; }
     }

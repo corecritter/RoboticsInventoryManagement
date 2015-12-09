@@ -13,7 +13,7 @@ namespace InventoryManagement.Controllers
         {
             if (Session["LoggedUserName"] != null)
             {
-                if ((bool)Session["isAdmin"])
+                if (Session["isAdmin"]!=null && (bool)Session["isAdmin"])
                     return RedirectToAction("Index", new { Controller = "ItemTypes", Action = "Index" });
                 else
                     return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
