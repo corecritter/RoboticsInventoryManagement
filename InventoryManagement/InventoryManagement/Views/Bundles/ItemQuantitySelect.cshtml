@@ -9,29 +9,27 @@
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <div class="form-group">
         @Html.HiddenFor(model => model.BundleName)
-        @for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
+        for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
         {
             @Html.HiddenFor(model => model.SelectedSchoolIds[i])
         }
-        @for (int i = 0; i < Model.SelectedItemTypes.Count; i++)
+        for (int i = 0; i < Model.SelectedItemTypes.Count; i++)
         {
             @Html.HiddenFor(model => model.SelectedItemTypes[i].ItemTypeId)
         }
-        @for (int i = 0; i < Model.ItemQuantityFields.Count; i++)
+        for (int i = 0; i < Model.ItemQuantityFields.Count; i++)
         {
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
-            <div class="form-group">
-                <label class="control-label col-md-2">@Html.DisplayFor(model => model.SelectedItemTypes[i].ItemName)</label>
-                
-                <div class="col-md-10">
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.DisplayFor(model => model.SelectedItemTypes[i].ItemName)
+                </div>
+                <div class="col-sm-4">
                     @Html.EditorFor(model => model.ItemQuantityFields[i])
                 </div>
             </div>
         }
-    </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Continue" class="btn btn-default" />

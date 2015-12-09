@@ -20,6 +20,10 @@ namespace InventoryManagement.Controllers
         // GET: Bundles
         public ActionResult Index()
         {
+            if (TempData["error"] != null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
             return View(db.Bundles.ToList().OrderBy(bundle => bundle.BundleName));
         }
 
@@ -62,7 +66,7 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(BundlesViewModel vm)
         {
-            if (vm.SchoolsCheckboxes!=null)
+            if (vm!=null || vm.SchoolsCheckboxes!=null)
             {
                 //if (labels.Count < numSelected) //Not enough labels for the number of item types selected
                 // return null;
@@ -104,7 +108,7 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ItemTypesSubmit(BundlesViewModel vm)
         {
-            if (vm.ItemTypesCheckboxes != null)
+            if (vm!=null || vm.ItemTypesCheckboxes != null)
             {
                 int numSelected = vm.ItemTypesCheckboxes.Where(x => x).ToList().Count;
                 if (numSelected == 0)
@@ -165,17 +169,23 @@ namespace InventoryManagement.Controllers
                 {
                     var itemType = db.ItemTypes.Find(vm.SelectedItemTypes[i].ItemTypeId);
                     if (itemType == null)
+                    {
+                        TempData["error"] = "An Item Type has been removed";
                         return RedirectToAction("Index");
+                    }
                     var available = itemType.Item.Where(x => x.CheckedInById == null); //Can't be checked in
                     available = available.Where(x => x.CheckedOutById == null);            //checked out
                     available = available.Where(x => x.BundleId == null);                  //or assigned to a bundle
                     if(itemType.HasLabel)
                         available = available.Where(x => x.LabelId == schoolId);
-                    var availableItems = available.ToList();
+                    var availableItems = available.Where(item => tempItems.IndexOf(item) < 0).ToList();
                     int numAvailable = availableItems.Count();
                     int desiredQuantity = vm.ItemQuantityFields[i];
                     if (desiredQuantity < 1)
+                    {
+                        TempData["error"] = "Quantity must be at least 1";
                         return RedirectToAction("Index");
+                    }
                     if(numAvailable >= desiredQuantity)
                     {
                         for (int j = 0; j < desiredQuantity; j++)
@@ -197,7 +207,10 @@ namespace InventoryManagement.Controllers
                     tempBundle.Add(newBundle);
                 }
                 else
-                    return null;
+                {
+                    TempData["error"] = "Not enough items available to meet demand";
+                    return RedirectToAction("Index");
+                }
             }
             //Add all the temp bundles to the database
             for (int i = 0; i < tempBundle.Count; i++)
@@ -206,16 +219,26 @@ namespace InventoryManagement.Controllers
                 db.SaveChanges();
             }
             //Associate Temporary Items with bundle id and save
-            for (int i = 0; i < tempBundle.Count; i++)
+            int currItemIndex = 0;
+            for (int i = 0; i < tempBundle.Count; i++)  //For every bundle
             {
-                int currIndex = 0;
-                for (int j = i * numSchools; j < numSchools * (i + 1); j++)
+                for(int j=0; j<vm.SelectedItemTypes.Count; j++) //For every selected item type
                 {
-                    var dbItem = db.Items.Find(tempItems[j].ItemId);
-                    dbItem.BundleId = tempBundle[currIndex].BundleId;
-                    db.Entry(dbItem).State = EntityState.Modified;
-                    db.SaveChanges();
-                    currIndex++;
+                    for (int k = 0; k < vm.ItemQuantityFields[j]; k++) //For every Selected Item type quantity
+                    {
+                        var dbItem = db.Items.Find(tempItems[currItemIndex].ItemId);
+                        if (dbItem == null || dbItem.BundleId != null)
+                        {
+                            for (int m = 0; m < tempBundle.Count; m++)
+                                DeleteBundle(tempBundle[m].BundleId);
+                            TempData["error"] = "Item has been assigned to another bundle or it was removed";
+                            return RedirectToAction("Index");
+                        }
+                        dbItem.BundleId = tempBundle[i].BundleId;
+                        db.Entry(dbItem).State = EntityState.Modified;
+                        db.SaveChanges();
+                        currItemIndex++;
+                    }
                 }
             }
             return RedirectToAction("Index");
@@ -273,21 +296,28 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (!DeleteBundle(id))
+                TempData["error"] = "Something Went wrong";
+            return RedirectToAction("Index");
+        }
+        private bool DeleteBundle(int id)
+        {
             Bundles bundles = db.Bundles.Find(id);
-            if(bundles==null)
-                return RedirectToAction("Index");
+            if (bundles == null)
+               return false;
             var associatedItems = db.Items.Where(item => item.BundleId == id).ToList();
-            for(int i=0; i< associatedItems.Count; i++)
+            for (int i = 0; i < associatedItems.Count; i++)
             {
                 var item = db.Items.Find(associatedItems[i].ItemId);
-                if(item==null)
-                    return RedirectToAction("Index");
-                db.Items.Remove(item);
+                if (item == null)
+                    return false;
+                item.BundleId = null;
+                db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
             }
             db.Bundles.Remove(bundles);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return true;
         }
 
         protected override void Dispose(bool disposing)
