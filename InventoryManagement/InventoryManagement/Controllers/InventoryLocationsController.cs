@@ -17,12 +17,16 @@ namespace InventoryManagement.Controllers
         // GET: InventoryLocations
         public ActionResult Index()
         {
-            return View(db.InventoryLocations.ToList());
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            return View(db.InventoryLocations.OrderBy(locxation => locxation.InventoryLocationName).ToList());
         }
 
         // GET: InventoryLocations/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +42,8 @@ namespace InventoryManagement.Controllers
         // GET: InventoryLocations/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return View();
         }
 
@@ -48,6 +54,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "InventoryLocationId,InventoryLocationName")] InventoryLocations inventoryLocations)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.InventoryLocations.Add(inventoryLocations);
@@ -61,6 +69,8 @@ namespace InventoryManagement.Controllers
         // GET: InventoryLocations/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -80,6 +90,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "InventoryLocationId,InventoryLocationName")] InventoryLocations inventoryLocations)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.Entry(inventoryLocations).State = EntityState.Modified;
@@ -92,6 +104,8 @@ namespace InventoryManagement.Controllers
         // GET: InventoryLocations/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +123,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             InventoryLocations inventoryLocations = db.InventoryLocations.Find(id);
             db.InventoryLocations.Remove(inventoryLocations);
             db.SaveChanges();

@@ -18,12 +18,16 @@ namespace InventoryManagement.Controllers
         // GET: Schools
         public ActionResult Index()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return View(db.Schools.ToList().OrderBy(x => x.SchoolName));
         }
 
         // GET: Schools/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -39,6 +43,8 @@ namespace InventoryManagement.Controllers
         // GET: Schools/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             SchoolsViewModel vm = new SchoolsViewModel
             {
                 SchoolModel = new Schools(),
@@ -56,6 +62,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(SchoolsViewModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 var existingSchool = db.Schools.Where(school => school.SchoolName == vm.SchoolModel.SchoolName);
@@ -83,6 +91,8 @@ namespace InventoryManagement.Controllers
         // GET: Schools/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -107,6 +117,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(SchoolsViewModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 var existingLabel = db.Schools.Where(school => school.LabelId == vm.SchoolModel.LabelId);
@@ -137,6 +149,8 @@ namespace InventoryManagement.Controllers
         // GET: Schools/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -154,6 +168,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             Schools schools = db.Schools.Find(id);
             db.Schools.Remove(schools);
             db.SaveChanges();

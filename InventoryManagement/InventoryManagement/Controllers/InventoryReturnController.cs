@@ -68,8 +68,9 @@ namespace InventoryManagement.Controllers
                                     if (visitedLabels.IndexOf(currSet[j].Label) == -1)
                                     {
                                         visitedLabels.Add(currSet[j].Label);
-                                        var labelsOfType = currSet.Where(item => item.Label.LabelId == currLabel.LabelId).ToList();
                                         currLabel = currSet[j].Label;
+                                        var labelsOfType = currSet.Where(item => item.Label.LabelId == currLabel.LabelId).ToList();
+                                        
                                         itemDisplayString.Add(labelsOfType.Count + " x " + currItemType.ItemName);
                                         itemDisplayLabel.Add(db.Labels.Find(currLabel.LabelId).LabelName);
                                         returnItemQuantities.Add(labelsOfType.Count);
@@ -115,10 +116,13 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult ReturnItems(InventoryReturnIndexViewModel vm)
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
             int currQuantityIndex = 0;
             int currItemIndex = 0;
+            IList<int> returned = new List<int>();
             foreach(bool isSelected in vm.ItemReturnCheckBoxes)
             {
                 if (isSelected)
@@ -126,7 +130,15 @@ namespace InventoryManagement.Controllers
                     int numReturning = vm.ItemReturnQuantities[currQuantityIndex];
                     for (int i = 0; i < numReturning; i++)
                     {
+                        
                         var currItem = db.Items.Find(vm.ItemsToReturn[currItemIndex].ItemId);
+                        if (returned.IndexOf(currItem.ItemId) != -1)
+                        {
+
+                        }
+                        else
+                            returned.Add(currItem.ItemId);
+
                         if (currItem == null)
                             return RedirectToAction("Index");
                         currItemIndex++;

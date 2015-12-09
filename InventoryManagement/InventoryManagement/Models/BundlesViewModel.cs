@@ -25,4 +25,10 @@ namespace InventoryManagement.Models
         [Range(1, int.MaxValue, ErrorMessage = "Quantity must be no less than 1.")]
         public IList<int> ItemQuantityFields { get; set; }
     }
+    public class BundlesDetailsViewModel
+    {
+        public Bundles BundleModel { get; set; }
+        public IList<string> ItemDisplayString { get; set; }
+        public IList<string> ItemDisplayLabels { get; set; }
+    }
 }

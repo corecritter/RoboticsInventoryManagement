@@ -35,4 +35,9 @@ namespace InventoryManagement.Models
         public IList<Items> ItemsMissingLocation { get; set; }
         public IList<IEnumerable<SelectListItem>> InventoryLocations { get; set; }
     }
+    public class ItemsNotReturnedViewModel
+    {
+        public IList<Items> ItemsNotReturned { get; set; }
+        public IList<bool> LostCheckBoxes { get; set; }
+    }
 }

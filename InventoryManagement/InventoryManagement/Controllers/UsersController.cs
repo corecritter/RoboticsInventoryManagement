@@ -17,6 +17,8 @@ namespace InventoryManagement.Controllers
         // GET: Users
         public ActionResult Index()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["error"] != null)
             {
                 ModelState.AddModelError("", (string)TempData["error"]);
@@ -27,6 +29,8 @@ namespace InventoryManagement.Controllers
         // GET: Users/Details/5
         public ActionResult Details(string id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -42,6 +46,8 @@ namespace InventoryManagement.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return View();
         }
 
@@ -52,6 +58,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "UserName,FirstName,LastName,Email,Password,PhoneNumber,isAdmin")] Users users)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 var existingUser = db.Users.Where(user => user.UserName == users.UserName);
@@ -71,6 +79,8 @@ namespace InventoryManagement.Controllers
         // GET: Users/Edit/5
         public ActionResult Edit(string id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -90,6 +100,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "UserName,FirstName,LastName,Email,Password,PhoneNumber,isAdmin")] Users users)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.Entry(users).State = EntityState.Modified;
@@ -102,6 +114,8 @@ namespace InventoryManagement.Controllers
         // GET: Users/Delete/5
         public ActionResult Delete(string id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -119,6 +133,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(string id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             Users users = db.Users.Find(id);
             if (users == null)
                 return RedirectToAction("Index");

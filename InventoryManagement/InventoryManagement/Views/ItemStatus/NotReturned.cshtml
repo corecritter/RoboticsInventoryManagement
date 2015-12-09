@@ -1,0 +1,70 @@
+﻿@model InventoryManagement.Models.ItemsNotReturnedViewModel
+@{
+    ViewBag.Title = "NotReturned";
+}
+
+<h2>Items Not Returned</h2>
+@if (Model.ItemsNotReturned.Count == 0)
+{
+    <h3>There are no Items that have not been returned to their inventory location</h3>
+    @Html.ActionLink("Back", "Index")
+}
+else
+{
+    using (Html.BeginForm("SubmitNotReturned", "ItemStatus", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-1">
+                @Html.DisplayName("Name")
+            </div>
+            <div class="col-sm-1">
+                @Html.DisplayName("Label")
+            </div>
+            <div class="col-sm-1">
+                @Html.DisplayName("Location")
+            </div>
+            <div class="col-sm-1">
+                @Html.DisplayName("Out By")
+            </div>
+            <div class="col-sm-1">
+                @Html.DisplayName("In By")
+            </div>
+            <div class="col-sm-1">
+                @Html.DisplayName("Remove")
+            </div>
+        </div>
+
+        for (int i = 0; i < Model.ItemsNotReturned.Count; i++)
+        {
+            @Html.HiddenFor(model => model.ItemsNotReturned[i].ItemId)
+            <div class="row">
+                <div class="col-sm-1">
+                    @Html.DisplayFor(model => model.ItemsNotReturned[i].ItemType.ItemName)
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayFor(model => model.ItemsNotReturned[i].Label.LabelName)
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayFor(model => model.ItemsNotReturned[i].InventoryLocation.InventoryLocationName)
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayFor(model => model.ItemsNotReturned[i].CheckedOutById)
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayFor(model => model.ItemsNotReturned[i].CheckedInById)
+                </div>
+                <div class="col-sm-1">
+                    @Html.CheckBoxFor(model => model.LostCheckBoxes[i])
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Remove Selected" class="btn btn-default" />
+            </div>
+        </div>
+    }
+}
+

@@ -24,8 +24,12 @@
             </div>
         </div>
 
-        
-
+        <div class="form-group">
+            @Html.LabelFor(model => model.ItemType.HasLabel, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.CheckBoxFor(model => model.ItemType.HasLabel, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
         <div class="row">
             <div class="col-sm-2">
                 @Html.DisplayName("Quantity")
@@ -35,31 +39,6 @@
                 @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
             </div>
         </div>
-
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ItemType.HasLabel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.CheckBoxFor(model => model.ItemType.HasLabel, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-        @*
-            <div class="form-group">
-                @Html.DisplayName("Quantity")
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ItemType.ItemName, htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ItemType.ItemName, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ItemType.ItemName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        *@
 
 
         <div class="form-group">

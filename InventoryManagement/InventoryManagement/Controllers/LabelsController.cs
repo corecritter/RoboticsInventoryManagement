@@ -17,12 +17,16 @@ namespace InventoryManagement.Controllers
         // GET: Labels
         public ActionResult Index()
         {
-            return View(db.Labels.ToList());
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            return View(db.Labels.OrderBy(label => label.LabelName).ToList());
         }
 
         // GET: Labels/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -38,6 +42,8 @@ namespace InventoryManagement.Controllers
         // GET: Labels/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return View();
         }
 
@@ -48,6 +54,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "LabelId,LabelName")] Labels labels)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.Labels.Add(labels);
@@ -61,6 +69,8 @@ namespace InventoryManagement.Controllers
         // GET: Labels/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -80,6 +90,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "LabelId,LabelName")] Labels labels)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.Entry(labels).State = EntityState.Modified;
@@ -92,6 +104,8 @@ namespace InventoryManagement.Controllers
         // GET: Labels/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +123,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             Labels labels = db.Labels.Find(id);
             if (labels == null)
                 return RedirectToAction("Index");

@@ -15,6 +15,8 @@ namespace InventoryManagement.Controllers
         //Show All checked out items by the selected school
         public ActionResult Index(int? id)
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index"});
             int result = (int)id;
@@ -58,6 +60,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult ItemTypesSubmit(CheckInItemTypeSelectViewModel vm)
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
             int index = 0;
@@ -90,6 +94,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult QuantitySelect()
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["CheckInQuantitySelectViewModel"] == null)
                 return RedirectToAction("Index");
             CheckInQuantitySelectViewModel vm = (CheckInQuantitySelectViewModel)TempData["CheckInQuantitySelectViewModel"];
@@ -97,6 +103,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult QuantitySubmit(CheckInQuantitySelectViewModel vm)
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
             var school = db.Schools.Find(vm.SelectedSchoolId);
@@ -147,6 +155,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult Confirm()
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["CheckInItemConfirmModel"] == null)
                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
 
@@ -158,6 +168,8 @@ namespace InventoryManagement.Controllers
         //Check All Items being returned
         public ActionResult CheckInItems(CheckInItemConfirmModel vm)
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null || Session["LoggedUserId"]==null)
                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
             string userName = (string)Session["LoggedUserID"];
@@ -179,6 +191,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult InventoryReturnReminder()
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["CheckInViewModel"] != null)
                 return View((CheckInViewModel)TempData["CheckInViewModel"]);
             else
@@ -189,6 +203,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult InventoryReturnConfirm()
         {
+            if (Session["isAdmin"] == null)
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
         }
     }

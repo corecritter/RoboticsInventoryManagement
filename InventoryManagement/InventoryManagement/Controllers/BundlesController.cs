@@ -20,6 +20,8 @@ namespace InventoryManagement.Controllers
         // GET: Bundles
         public ActionResult Index()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["error"] != null)
             {
                 ModelState.AddModelError("", (string)TempData["error"]);
@@ -30,21 +32,50 @@ namespace InventoryManagement.Controllers
         // GET: Bundles/Details/5
         public ActionResult Details(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bundles bundles = db.Bundles.Find(id);
-            if (bundles == null)
+            Bundles selectedBundle = db.Bundles.Find(id);
+            if (selectedBundle == null)
             {
                 return HttpNotFound();
             }
-            return View(bundles);
+            IList<ItemTypes> itemTypesSelected = new List<ItemTypes>();
+            IList<Items> itemsToCheckOut = new List<Items>();
+            IList<string> itemDisplayString = new List<string>();
+            IList<string> itemDisplayLabels = new List<string>();
+            foreach (var bundleItem in selectedBundle.Items)
+            {
+                if (itemTypesSelected.IndexOf(bundleItem.ItemType) == -1)
+                {
+                    itemTypesSelected.Add(bundleItem.ItemType);
+                    var itemsOfType = selectedBundle.Items.Where(item => item.ItemTypeId == bundleItem.ItemTypeId).OrderBy(item => item.ItemType.ItemName).ToList();
+                    itemDisplayString.Add(itemsOfType.Count + " x " + bundleItem.ItemType.ItemName);
+                    if (bundleItem.ItemType.HasLabel)
+                        itemDisplayLabels.Add(bundleItem.Label.LabelName);
+                    else
+                        itemDisplayLabels.Add("(No Label)");
+                    foreach (var itemToCheckout in itemsOfType)
+                        itemsToCheckOut.Add(itemToCheckout);
+                }
+            }
+            BundlesDetailsViewModel vm = new BundlesDetailsViewModel
+            {
+                BundleModel = selectedBundle,
+                ItemDisplayString = itemDisplayString,
+                ItemDisplayLabels = itemDisplayLabels
+            };
+            return View(vm);
         }
 
         // GET: Bundles/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             //Checkbox for every school
             IList<bool> schools = new List<bool>();
             foreach (var school in db.Schools)
@@ -66,11 +97,10 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(BundlesViewModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm!=null || vm.SchoolsCheckboxes!=null)
             {
-                //if (labels.Count < numSelected) //Not enough labels for the number of item types selected
-                // return null;
-
                 IList<int> checkedSchools = new List<int>();
                 var labels = db.Labels.ToList();
                 int numSelected = vm.SchoolsCheckboxes.Where(x => x).Count();
@@ -90,6 +120,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult ItemTypesSelect()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["BundlesViewModel"] != null)
             {
                 IList<bool> itemTypes = new List<bool>(); //For all the checkboxes
@@ -108,6 +140,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ItemTypesSubmit(BundlesViewModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm!=null || vm.ItemTypesCheckboxes != null)
             {
                 int numSelected = vm.ItemTypesCheckboxes.Where(x => x).ToList().Count;
@@ -136,6 +170,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult ItemQuantitySelect()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (TempData["BundlesViewModel"] == null)
                 return RedirectToAction("Index");
             //For every item type selected, display a quantity field
@@ -151,6 +187,8 @@ namespace InventoryManagement.Controllers
         }
         public ActionResult ItemQuantitySubmit(BundlesViewModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
             var itemTypes = db.ItemTypes.ToList();
@@ -203,7 +241,8 @@ namespace InventoryManagement.Controllers
                 //Create Temporary Bundle
                 if (canCreate)
                 {
-                    var newBundle = new Bundles { BundleName = vm.BundleName, SchoolId = schoolId };
+                    var school = db.Schools.Find(schoolId);
+                    var newBundle = new Bundles { BundleName = vm.BundleName + " (" + school.SchoolName  +")", SchoolId = schoolId };
                     tempBundle.Add(newBundle);
                 }
                 else
@@ -248,6 +287,8 @@ namespace InventoryManagement.Controllers
         // GET: Bundles/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -267,9 +308,17 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "BundleId,BundleName")] Bundles bundles)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
-                db.Entry(bundles).State = EntityState.Modified;
+                var bundle = db.Bundles.Find(bundles.BundleId);
+                if (bundle == null)
+                {
+                    TempData["error"] = "Bundle has been previously removed";
+                    return RedirectToAction("Index");
+                }
+                db.Entry(bundle).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -279,16 +328,20 @@ namespace InventoryManagement.Controllers
         // GET: Bundles/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Bundles bundles = db.Bundles.Find(id);
-            if (bundles == null)
+            Bundles bundle = db.Bundles.Find(id);
+            if (bundle == null)
             {
                 return HttpNotFound();
             }
-            return View(bundles);
+            
+
+            return View(bundle);
         }
 
         // POST: Bundles/Delete/5

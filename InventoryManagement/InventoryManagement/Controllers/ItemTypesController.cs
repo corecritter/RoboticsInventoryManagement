@@ -19,8 +19,10 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes
         public ActionResult Index()
         {
-            if (Session["isAdmin"] != null && (bool)Session["isAdmin"])
-            {
+            if(Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            //if (Session["isAdmin"] != null && (bool)Session["isAdmin"])
+            //{
                 var itemTypes = db.ItemTypes.OrderBy(item => item.ItemName).ToList();
                 IList<int> itemTypesQuantities = new List<int>();
                 foreach (var itemType in itemTypes)
@@ -31,13 +33,15 @@ namespace InventoryManagement.Controllers
                     ItemQuantities = itemTypesQuantities
                 };
                 return View(vm);
-            }
-            return RedirectToAction("Index", new { controller = "Login", action = "Index" });
+            //}
+            //return RedirectToAction("Index", new { controller = "Login", action = "Index" });
         }
 
         // GET: ItemTypes/Create
         public ActionResult Create()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             ItemTypesQuantityModel vm = new ItemTypesQuantityModel
             {
                 ItemType = new ItemTypes { HasLabel = true },
@@ -53,6 +57,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(ItemTypesQuantityModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
 
@@ -69,6 +75,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult Add(int id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             var itemType = db.ItemTypes.Find(id);
             if (itemType == null)
                 return RedirectToAction("Index");
@@ -84,9 +92,11 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult AddItemQuantity(ItemTypesQuantityModel vm)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             //if (ModelState.IsValid)
             //{
-                var itemType = db.ItemTypes.Find(vm.ItemType.ItemTypeId);
+            var itemType = db.ItemTypes.Find(vm.ItemType.ItemTypeId);
                 if (itemType == null)
                     return RedirectToAction("Index");
                 for(int i=0; i<vm.Quantity; i++)
@@ -102,6 +112,8 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes/Edit/5
         public ActionResult Edit(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -180,6 +192,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit(ItemTypesViewModel viewModel)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (ModelState.IsValid)
             {
                 db.Entry(viewModel.ItemTypeModel).State = EntityState.Modified;
@@ -198,6 +212,8 @@ namespace InventoryManagement.Controllers
         // GET: ItemTypes/Delete/5
         public ActionResult Delete(int? id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -212,6 +228,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult DeleteItem(int? itemId)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (itemId == null)
             {
                 return HttpNotFound();
@@ -225,6 +243,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult AddItem(int? itemTypeId)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (itemTypeId == null)
             {
                 return HttpNotFound();
@@ -244,6 +264,8 @@ namespace InventoryManagement.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             ItemTypes itemTypes = db.ItemTypes.Find(id);
             if (itemTypes == null)
                 return RedirectToAction("Index");
@@ -262,6 +284,8 @@ namespace InventoryManagement.Controllers
 
         public ActionResult CreatePackages()
         {
+            if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
+                return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             return RedirectToAction("Index", new { controller = "Bundles", action = "Index" });
         }
 

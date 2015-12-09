@@ -1,26 +1,40 @@
-﻿@model InventoryManagement.Database.Bundles
+﻿@model InventoryManagement.Models.BundlesDetailsViewModel
 
 @{
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>Bundle Details</h2>
 
 <div>
-    <h4>Bundles</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.BundleName)
+            @Html.DisplayNameFor(model => model.BundleModel.BundleName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.BundleName)
+            @Html.DisplayFor(model => model.BundleModel.BundleName)
         </dd>
+        <dt>
+            @Html.DisplayName("Item")
+        </dt>
 
+        <dd>
+            @Html.DisplayName("Label")
+        </dd>
+        @for (int i = 0; i < Model.ItemDisplayString.Count; i++)
+        {
+            <dt>
+                @Html.DisplayFor(model => model.ItemDisplayString[i])
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ItemDisplayLabels[i])
+            </dd>
+        }
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.BundleId }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
