@@ -19,6 +19,7 @@ namespace InventoryManagement.Controllers
             string userName = (string)Session["LoggedUserId"];
             var itemsToReturn = GetItemsToReturn(userName);
             IList<ItemTypes> itemTypesToReturn = new List<ItemTypes>();
+            IList<Items> sortedItemsToReturn = new List<Items>();
             IList<InventoryLocations> inventoryLocations = new List<InventoryLocations>();
             IList<string> itemDisplayString = new List<string>();
             IList<string> itemDisplayInventoryLocation = new List<string>();
@@ -35,7 +36,9 @@ namespace InventoryManagement.Controllers
                 if (index == -1)
                 {
                     itemTypesToReturn.Add(currItemType);
-                    var byLocation = itemsToReturn.Where(item => item.ItemTypeId == currItemType.ItemTypeId).ToList();
+                    var byLocation = itemsToReturn.Where(item => item.ItemTypeId == currItemType.ItemTypeId).OrderBy(item => item.InventoryLocation.InventoryLocationName).ToList();
+                    //for (int j = 0; j < byLocation.Count; j++)
+                        //sortedItemsToReturn.Add(byLocation[j]);
                     //var byLocation = itemsOfType.OrderBy(item => item.InventoryLocation.InventoryLocationName).ToList();
 
                     //var byLabel = itemsOfType.OrderBy(item => item.Label.LabelName);
@@ -50,9 +53,15 @@ namespace InventoryManagement.Controllers
                         {
                             int currCount = 0;
                             IList<Items> currSet = new List<Items>();
-                            for(int j= prevIndex; j<=currIndex; j++)
+                            for(int j= prevIndex; j<currIndex; j++)
                             {
                                 currSet.Add(byLocation[j]);
+                                sortedItemsToReturn.Add(byLocation[j]);
+                            }
+                            if(currIndex == byLocation.Count - 1)
+                            {
+                                currSet.Add(byLocation[currIndex]);
+                                sortedItemsToReturn.Add(byLocation[currIndex]);
                             }
                             
                             if (currItemType.HasLabel)
@@ -83,7 +92,7 @@ namespace InventoryManagement.Controllers
                             
                             itemDisplayInventoryLocation.Add(currLocation.InventoryLocationName);
                             currLocation = byLocation[currIndex].InventoryLocation;
-                            prevIndex = currIndex+1;
+                            prevIndex = currIndex;
                         }
                         currIndex++;
                     }
@@ -92,7 +101,7 @@ namespace InventoryManagement.Controllers
 
             InventoryReturnIndexViewModel vm = new InventoryReturnIndexViewModel
             {
-                ItemsToReturn = itemsToReturn,
+                ItemsToReturn = sortedItemsToReturn,
                 ItemDisplayString = itemDisplayString,
                 ItemDisplayInventoryLocation = itemDisplayInventoryLocation,
                 ItemDisplayLabelString = itemDisplayLabel,

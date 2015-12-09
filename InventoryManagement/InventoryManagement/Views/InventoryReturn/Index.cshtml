@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Items That Need to be Returned</h2>
+<h2>Return these items to their inventory locations</h2>
 @using (Html.BeginForm("ReturnItems", "InventoryReturn", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
