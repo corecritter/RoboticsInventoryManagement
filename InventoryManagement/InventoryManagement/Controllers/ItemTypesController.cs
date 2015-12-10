@@ -33,8 +33,6 @@ namespace InventoryManagement.Controllers
                     ItemQuantities = itemTypesQuantities
                 };
                 return View(vm);
-            //}
-            //return RedirectToAction("Index", new { controller = "Login", action = "Index" });
         }
 
         // GET: ItemTypes/Create
@@ -42,10 +40,17 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
+            {
+                Text = x.InventoryLocationName,
+                Value = x.InventoryLocationId.ToString()
+            }).OrderBy(listItem => listItem.Text).ToList();
+            inventoryLocations.Insert(0, new SelectListItem { Text = "", Value = null });
             ItemTypesQuantityModel vm = new ItemTypesQuantityModel
             {
                 ItemType = new ItemTypes { HasLabel = true },
-                Quantity = 0
+                Quantity = 0,
+                InventoryLocations = inventoryLocations
             };
             return View(vm);
         }
@@ -61,16 +66,19 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
-
-                db.ItemTypes.Add(vm.ItemType);
+            int? invLocId = vm.SelectedInventoryLocation;
+            var invLocation = db.InventoryLocations.Find(invLocId);
+            db.ItemTypes.Add(vm.ItemType);
+            db.SaveChanges();
+            for (int i= 0; i < vm.Quantity; i++)
+            {
+                var newItem = new Items { ItemTypeId = vm.ItemType.ItemTypeId};
+                if (invLocation != null)
+                    newItem.InventoryLocationId = invLocId;
+                db.Items.Add(newItem);
                 db.SaveChanges();
-                for (int i= 0; i < vm.Quantity; i++)
-                {
-                    var newItem = new Items { ItemTypeId = vm.ItemType.ItemTypeId };
-                    db.Items.Add(newItem);
-                    db.SaveChanges();
-                }
-                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
         }
 
         public ActionResult Add(int id)
@@ -80,10 +88,17 @@ namespace InventoryManagement.Controllers
             var itemType = db.ItemTypes.Find(id);
             if (itemType == null)
                 return RedirectToAction("Index");
+            IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
+            {
+                Text = x.InventoryLocationName,
+                Value = x.InventoryLocationId.ToString()
+            }).OrderBy(listItem => listItem.Text).ToList();
+            inventoryLocations.Insert(0, new SelectListItem { Text = "", Value = null });
             ItemTypesQuantityModel vm = new ItemTypesQuantityModel
             {
                 ItemType = itemType,
-                Quantity = 1
+                Quantity = 1,
+                InventoryLocations = inventoryLocations
             };
             return View(vm);
         }
@@ -97,14 +112,18 @@ namespace InventoryManagement.Controllers
             //if (ModelState.IsValid)
             //{
             var itemType = db.ItemTypes.Find(vm.ItemType.ItemTypeId);
-                if (itemType == null)
-                    return RedirectToAction("Index");
-                for(int i=0; i<vm.Quantity; i++)
-                {
-                    var item = new Items { ItemTypeId = itemType.ItemTypeId };
-                    db.Items.Add(item);
-                    db.SaveChanges();
-                }
+            if (itemType == null)
+                return RedirectToAction("Index");
+            int? invLocId = vm.SelectedInventoryLocation;
+            var invLocation = db.InventoryLocations.Find(invLocId);
+            for (int i=0; i<vm.Quantity; i++)
+            {
+                var item = new Items { ItemTypeId = itemType.ItemTypeId };
+                if (invLocation != null)
+                    item.InventoryLocationId = invLocId;
+                db.Items.Add(item);
+                db.SaveChanges();
+            }
             //}
             return RedirectToAction("Index");
         }
@@ -124,32 +143,32 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
-            var itemTypeModel = itemTypes;
+            var itemsModel = itemTypes.Item.OrderBy(item =>  item.InventoryLocation != null ? item.InventoryLocation.InventoryLocationName : "").ThenBy(item => item.Label !=null ? item.Label.LabelName : "").ToList();
             //Create List of Inventory Locations
             IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
                 Text = x.InventoryLocationName,
                 Value = x.InventoryLocationId.ToString()
-            }).ToList();
+            }).OrderBy(listItem => listItem.Text).ToList();
             //Create List of Labels 
             IList<SelectListItem> labels = db.Labels.Select(x => new SelectListItem
             {
                 Text = x.LabelName,
                 Value = x.LabelId.ToString()
-            }).ToList();
+            }).OrderBy(listItem => listItem.Text).ToList();
             //Insert Empty value for no location
             inventoryLocations.Insert(0, new SelectListItem { Text = "", Value = null });
             labels.Insert(0, new SelectListItem { Text = "", Value = null });
             //Create List of Lists of SelectListItems (1 for every Item)
             IList<IEnumerable<SelectListItem>> invLocSelectLists = new List<IEnumerable<SelectListItem>>();
             IList<IEnumerable<SelectListItem>> labelSelectLists = new List<IEnumerable<SelectListItem>>();
-            for (int i= 0; i < itemTypeModel.Item.Count; i++)
+            for (int i= 0; i < itemsModel.Count; i++)
             {
-                var currId = itemTypeModel.Item[i].InventoryLocationId;         //Current Id
+                var currId = itemsModel[i].InventoryLocationId;         //Current Id
                 IList<SelectListItem> currList = new List<SelectListItem>();    //Create Copy of list
                 foreach (var item in inventoryLocations)
                     currList.Add(new SelectListItem {Text= item.Text, Value = item.Value });
-                var currLabelId = itemTypeModel.Item[i].LabelId;
+                var currLabelId = itemsModel[i].LabelId;
                 IList<SelectListItem> currLabelList = new List<SelectListItem>();    //Create Copy of list
                 foreach (var item in labels)
                     currLabelList.Add(new SelectListItem { Text = item.Text, Value = item.Value });
@@ -181,7 +200,8 @@ namespace InventoryManagement.Controllers
 
             ItemTypesViewModel vm = new ItemTypesViewModel
             {
-                ItemTypeModel = itemTypeModel,
+                ItemTypeModel = itemTypes,
+                ItemsModel = itemsModel,
                 InventoryLocations = invLocSelectLists,
                 Labels = labelSelectLists
             };
@@ -198,10 +218,15 @@ namespace InventoryManagement.Controllers
             {
                 db.Entry(viewModel.ItemTypeModel).State = EntityState.Modified;
                 db.SaveChanges();
-                if (viewModel.ItemTypeModel.Item != null)
-                    for(int i = 0; i<viewModel.ItemTypeModel.Item.Count; i++)
+                if (viewModel.ItemsModel != null)
+                    for(int i = 0; i<viewModel.ItemsModel.Count; i++)
                     {
-                        db.Entry((viewModel.ItemTypeModel.Item[i])).State = EntityState.Modified;
+                        var dbItem = db.Items.Find(viewModel.ItemsModel[i].ItemId);
+                        if (dbItem == null)
+                            return RedirectToAction("Index");
+                        dbItem.InventoryLocationId = viewModel.ItemsModel[i].InventoryLocationId;
+                        dbItem.LabelId = viewModel.ItemsModel[i].LabelId;
+                        db.Entry(dbItem).State = EntityState.Modified;
                         db.SaveChanges();
                     }
                 return RedirectToAction("Index");

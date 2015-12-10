@@ -12,6 +12,7 @@ namespace InventoryManagement.Models
     public class ItemTypesViewModel
     {
         public ItemTypes ItemTypeModel { get; set; }
+        public IList<Items> ItemsModel { get; set; }
 
         [Display(Name = "Inventory Location")]
         public  IList<IEnumerable<SelectListItem>> InventoryLocations{ get; set; }
@@ -24,12 +25,16 @@ namespace InventoryManagement.Models
     {
         public List<ItemTypes> ItemTypesModel { get; set; }
         public IList<int> ItemQuantities { get; set; }
-
     }
 
     public class ItemTypesQuantityModel
     {
         public ItemTypes ItemType { get; set; }
+        [Display(Name = "Quantity")]
         public int Quantity { get; set; }
+
+        [Display(Name = "Inventory Location")]
+        public IEnumerable<SelectListItem> InventoryLocations { get; set; }
+        public int? SelectedInventoryLocation { get; set; }
     }
 }
