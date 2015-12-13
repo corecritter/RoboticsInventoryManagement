@@ -4,8 +4,8 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
+<h4>Labels</h4>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>

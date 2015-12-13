@@ -4,35 +4,34 @@
     ViewBag.Title = "Create";
 }
 
-<h2>Create</h2>
+<h4>Create a Bundle</h4>
 
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontalLeft">
-        <h4>Bundles</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="row">
-            <div class="col-sm-2">
-                @Html.LabelFor(model => model.BundleName, htmlAttributes: new { @class = "control-label col-md-2" })
+    if (Request.Browser.IsMobileDevice)
+    {
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-xs-4">
+                    @Html.LabelFor(model => model.BundleName)
+                </div>
+                <div class="col-xs-4">
+                    @Html.EditorFor(model => model.BundleName)
+                </div>
             </div>
-            <div class="col-sm-4">
-                @Html.EditorFor(model => model.BundleName, new { htmlAttributes = new { @class = "form-control" } })
-            </div>
-        </div>
-        <h3>Select Schools to create a bundle for</h3>
-        
-            @for (int i = 0; i < Model.SchoolsCheckboxes.Count; i++)
+            <h4>Select Schools to create a bundle for</h4>
+
+            for (int i = 0; i < Model.SchoolsCheckboxes.Count; i++)
             {
                 @Html.HiddenFor(model => model.Schools[i].SchoolId)
                 <div class="row">
-                    <div class="col-sm-2">
+                    <div class="col-xs-4">
                         @Html.DisplayName(Model.Schools[i].SchoolName)
                     </div>
-                    <div class="col-sm-4">
-                        @Html.CheckBoxFor(model => model.SchoolsCheckboxes[i], htmlAttributes: new { @class = "form-control" })
+                    <div class="col-xs-4">
+                        @Html.CheckBoxFor(model => model.SchoolsCheckboxes[i])
                     </div>
                 </div>
             }
@@ -41,7 +40,42 @@
                     <input type="submit" value="Continue" class="btn btn-default" />
                 </div>
             </div>
-    </div>
+    }
+    else
+    {
+        <div class="form-horizontalLeft">
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.LabelFor(model => model.BundleName, htmlAttributes: new { @class = "control-label col-md-2" })
+                </div>
+                <div class="col-sm-4">
+                    @Html.EditorFor(model => model.BundleName, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+            </div>
+            <h4>Select Schools to create a bundle for</h4>
+
+            @for (int i = 0; i < Model.SchoolsCheckboxes.Count; i++)
+            {
+                @Html.HiddenFor(model => model.Schools[i].SchoolId)
+                <div class="row">
+                    <div class="col-sm-2">
+                        @Html.DisplayName(Model.Schools[i].SchoolName)
+                    </div>
+                    <div class="col-sm-4">
+                        @Html.CheckBoxFor(model => model.SchoolsCheckboxes[i])
+                    </div>
+                </div>
+            }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Continue" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+
 }
 
 <div>

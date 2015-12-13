@@ -31,7 +31,7 @@ namespace InventoryManagement.Controllers
             noLabelItems = noLabelItems.Where(item => item.LabelId == null).OrderBy(item => item.ItemType.ItemName);
             if (noLabelItems.ToList().Count == 0)
             {
-                TempData["error"] = "No Items Exist Without a Label";
+                TempData["error"] = "No items exist without a label";
                 return RedirectToAction("Index");
             }
             IList<SelectListItem> labels = db.Labels.Select(x => new SelectListItem
@@ -69,7 +69,7 @@ namespace InventoryManagement.Controllers
                 var dbItem = db.Items.Find(vm.ItemsMissingLabel[i].ItemId);
                 if (dbItem == null)
                 {
-                    TempData["error"] = "Could Not Find Item";
+                    TempData["error"] = "Could not find item";
                     return RedirectToAction("Index");
                 }
                 dbItem.LabelId = vm.ItemsMissingLabel[i].LabelId;
@@ -85,7 +85,7 @@ namespace InventoryManagement.Controllers
             var noInventoryLocationItems = db.Items.Where(item => item.InventoryLocationId == null);
             if (noInventoryLocationItems.ToList().Count == 0)
             {
-                TempData["error"] = "No Items Exist Without an Inventory Location";
+                TempData["error"] = "No items exist without an inventory location";
                 return RedirectToAction("Index");
             }
             IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
@@ -123,7 +123,7 @@ namespace InventoryManagement.Controllers
                 var dbItem = db.Items.Find(vm.ItemsMissingLocation[i].ItemId);
                 if (dbItem == null)
                 {
-                    TempData["error"] = "Could Not Find Item";
+                    TempData["error"] = "Could not find item";
                     return RedirectToAction("Index");
                 }
                 dbItem.InventoryLocationId = vm.ItemsMissingLocation[i].InventoryLocationId;
@@ -137,13 +137,14 @@ namespace InventoryManagement.Controllers
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             var allItems = db.Items.Where(item => item.CheckedOutById != null);         //Items checked out or returned
-            var checkedOutItems = allItems.Where(item => item.CheckedInById == null).OrderBy(item => item.ItemType.ItemName);  //Items checked out
+            var checkedOutItems = allItems.Where(item => item.CheckedInById == null).OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.Label!=null? item.Label.LabelName : "");  //Items checked out
             if (checkedOutItems.ToList().Count == 0)
             {
-                TempData["error"] = "No Items Currently Checked Out";
+                TempData["error"] = "No items are currently checked out";
                 return RedirectToAction("Index");
             }
             IList<bool> lostItems = new List<bool>();
+            IList<bool> returnedItems = new List<bool>();
             IList<string> schoolDisplayStrings = new List<string>();
             foreach (var item in checkedOutItems)
             {
@@ -152,12 +153,14 @@ namespace InventoryManagement.Controllers
                 if (school.Count>0)
                     schoolDisplayStrings.Add(school[0].SchoolName);
                 lostItems.Add(false);
+                returnedItems.Add(false);
             }
             ItemsOutViewModel vm = new ItemsOutViewModel
             {
                 CheckedOutItems = checkedOutItems.ToList(),
                 SchoolDisplayStrings = schoolDisplayStrings,
-                ItemsLost = lostItems
+                ItemsLost = lostItems,
+                ItemReturn = returnedItems
             };
             return View(vm);
         }
@@ -192,10 +195,11 @@ namespace InventoryManagement.Controllers
             var allitems = db.Items.Where(item => item.CheckedOutById != null);
             allitems = allitems.Where(item => item.CheckedInById != null);
             allitems = allitems.Where(item => item.IsReturned == false);
-            var notReturnedItems = allitems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.InventoryLocation.InventoryLocationName).ThenBy(item => item.Label.LabelName).ToList();
+            var notReturnedItems = allitems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.InventoryLocation.InventoryLocationName).ThenBy(item => item.Label!=null? item.Label.LabelName : "").ToList();
             if (notReturnedItems.Count == 0)
             {
                 TempData["error"] = "No items are currently checked in and not returned";
+                return RedirectToAction("Index");
             }
             IList<bool> lostItem = new List<bool>();
             for(int i=0; i< notReturnedItems.Count; i++)
@@ -243,7 +247,7 @@ namespace InventoryManagement.Controllers
             pendingApprovalItems = pendingApprovalItems.Where(item => item.IsReturned == true);
             if (pendingApprovalItems.ToList().Count == 0)
             {
-                TempData["error"] = "No Items Currently Pending Approval";
+                TempData["error"] = "No items currently pending approval";
                 return RedirectToAction("Index");
             }
             IList<bool> approveItems = new List<bool>();
@@ -251,7 +255,7 @@ namespace InventoryManagement.Controllers
                 approveItems.Add(true);
             ItemsApproveViewModel vm = new ItemsApproveViewModel
             {
-                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.Label.LabelName).ToList(),
+                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.Label!=null? item.Label.LabelName : "").ToList(),
                 ApproveCheckBoxes = approveItems
             };
             return View(vm);

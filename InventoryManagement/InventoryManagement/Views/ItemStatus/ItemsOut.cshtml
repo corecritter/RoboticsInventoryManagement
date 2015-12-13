@@ -3,62 +3,106 @@
     ViewBag.Title = "ItemsOut";
 }
 
-<h2>Items Currently Checked Out</h2>
+<h4>Items Currently Checked Out</h4>
 @if (Model.CheckedOutItems.Count == 0)
 {
-    <h3>There are no Items currently Checked Out</h3>
+    <h4>There are no Items currently Checked Out</h4>
     @Html.ActionLink("Back", "Index")
 }
 else
 {
-
-
-using (Html.BeginForm("RemoveItems", "ItemStatus", FormMethod.Post))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="row">
-        <div class="col-sm-2">
-            @Html.DisplayName("Item Name")
-        </div>
-        <div class="col-sm-2">
-            @Html.DisplayName("Label")
-        </div>
-        <div class="col-sm-2">
-            @Html.DisplayName("School")
-        </div>
-        <div class="col-sm-2">
-            @Html.DisplayName("Lost")
-        </div>
-    </div>
-    for (int i = 0; i < Model.CheckedOutItems.Count; i++)
+    using (Html.BeginForm("RemoveItems", "ItemStatus", FormMethod.Post))
     {
-        @Html.HiddenFor(model => model.CheckedOutItems[i].ItemId)
-        <div class="row">
-            <div class="col-sm-2">
-                @Html.DisplayFor(model => model.CheckedOutItems[i].ItemType.ItemName)
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        if (Request.Browser.IsMobileDevice)
+        {
+            <div class="row">
+                <div class="col-xs-3">
+                    @Html.DisplayName("Name")
+                </div>
+                <div class="col-xs-3">
+                    @Html.DisplayName("School")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Lost")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Return")
+                </div>
             </div>
-            <div class="col-sm-2">
-                @if (Model.CheckedOutItems[i].ItemType.HasLabel)
-                {
-                @Html.DisplayFor(model => model.CheckedOutItems[i].Label.LabelName)
-                }
-                else
-                {
-                    @Html.DisplayName("(No Label)")
-                }
+            for (int i = 0; i < Model.CheckedOutItems.Count; i++)
+            {
+                @Html.HiddenFor(model => model.CheckedOutItems[i].ItemId)
+                <div class="row">
+                    <div class="col-xs-3">
+                        @Html.DisplayFor(model => model.CheckedOutItems[i].ItemType.ItemName)
+                    </div>
+                    <div class="col-xs-3">
+                        @Html.DisplayFor(model => model.SchoolDisplayStrings[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBoxFor(model => model.ItemsLost[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBoxFor(model => model.ItemReturn[i])
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.DisplayName("Item Name")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Label")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("School")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Lost")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Returned")
+                </div>
             </div>
-            <div class="col-sm-2">
-                @Html.DisplayFor(model => model.SchoolDisplayStrings[i])
-            </div>
-            <div class="col-sm-2">
-                @Html.CheckBoxFor(model => model.ItemsLost[i])
-            </div>
-        </div>
-    }
+            for (int i = 0; i < Model.CheckedOutItems.Count; i++)
+            {
+                @Html.HiddenFor(model => model.CheckedOutItems[i].ItemId)
+                <div class="row">
+                    <div class="col-sm-2">
+                        @Html.DisplayFor(model => model.CheckedOutItems[i].ItemType.ItemName)
+                    </div>
+                    <div class="col-sm-2">
+                        @if (Model.CheckedOutItems[i].ItemType.HasLabel)
+                        {
+                            @Html.DisplayFor(model => model.CheckedOutItems[i].Label.LabelName)
+                        }
+                        else
+                        {
+                            @Html.DisplayName("(No Label)")
+                        }
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.DisplayFor(model => model.SchoolDisplayStrings[i])
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.CheckBoxFor(model => model.ItemsLost[i])
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.CheckBoxFor(model => model.ItemReturn[i])
+                    </div>
+                </div>
+            }
+        }
+
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Remove Selected" class="btn btn-default" />
+            <input type="submit" value="Update Selected" class="btn btn-default" />
         </div>
     </div>
 }

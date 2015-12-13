@@ -21,18 +21,20 @@ namespace InventoryManagement.Controllers
         {
             if(Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
-            //if (Session["isAdmin"] != null && (bool)Session["isAdmin"])
-            //{
-                var itemTypes = db.ItemTypes.OrderBy(item => item.ItemName).ToList();
-                IList<int> itemTypesQuantities = new List<int>();
-                foreach (var itemType in itemTypes)
-                    itemTypesQuantities.Add(itemType.Item.Count);
-                ItemTypesIndexViewModel vm = new ItemTypesIndexViewModel
-                {
-                    ItemTypesModel = itemTypes,
-                    ItemQuantities = itemTypesQuantities
-                };
-                return View(vm);
+            if (TempData["error"] != null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
+            var itemTypes = db.ItemTypes.OrderBy(item => item.ItemName).ToList();
+            IList<int> itemTypesQuantities = new List<int>();
+            foreach (var itemType in itemTypes)
+                itemTypesQuantities.Add(itemType.Item.Count);
+            ItemTypesIndexViewModel vm = new ItemTypesIndexViewModel
+            {
+                ItemTypesModel = itemTypes,
+                ItemQuantities = itemTypesQuantities
+            };
+            return View(vm);
         }
 
         // GET: ItemTypes/Create
@@ -143,7 +145,7 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
-            var itemsModel = itemTypes.Item.OrderBy(item =>  item.InventoryLocation != null ? item.InventoryLocation.InventoryLocationName : "").ThenBy(item => item.Label !=null ? item.Label.LabelName : "").ToList();
+            var itemsModel = itemTypes.Item.Where(item => item.CheckedOutSchoolId==null).OrderBy(item =>  item.InventoryLocation != null ? item.InventoryLocation.InventoryLocationName : "").ThenBy(item => item.Label !=null ? item.Label.LabelName : "").ToList();
             //Create List of Inventory Locations
             IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {
@@ -291,18 +293,27 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
-            ItemTypes itemTypes = db.ItemTypes.Find(id);
-            if (itemTypes == null)
+            ItemTypes itemType = db.ItemTypes.Find(id);
+            if (itemType == null)
                 return RedirectToAction("Index");
-            for(int i=0; i< itemTypes.Item.Count; i++)
+            var checkedOutItems = itemType.Item.Where(item => item.CheckedOutSchoolId != null).ToList();
+            if (checkedOutItems.Count != 0)
             {
-                var item = db.Items.Find(itemTypes.Item[i].ItemId);
+                TempData["error"] = "Item type has items currently checked out, cannot continue";
+                return RedirectToAction("Index");
+            }
+            for(int i=0; i< itemType.Item.Count; i++)
+            {
+                var item = db.Items.Find(itemType.Item[i].ItemId);
                 if (item == null)
+                {
+                    TempData["error"] = "An item has been removed, cannot continue";
                     return RedirectToAction("Index");
+                }
                 db.Items.Remove(item);
                 db.SaveChanges();
             }
-            db.ItemTypes.Remove(itemTypes);
+            db.ItemTypes.Remove(itemType);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

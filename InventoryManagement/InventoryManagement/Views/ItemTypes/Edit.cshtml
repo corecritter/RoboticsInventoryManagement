@@ -40,15 +40,41 @@
                         @Html.HiddenFor(model => model.ItemsModel[i].BundleId)
                         @Html.HiddenFor(model => model.ItemsModel[i].CheckedInById)
                         @Html.HiddenFor(model => model.ItemsModel[i].CheckedOutById)
-                        <div class="row">
-                            <div class="col-md-4">
-                                @Html.LabelFor(model => model.InventoryLocations) @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
+                        if (Request.Browser.IsMobileDevice)
+                        {
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    @Html.LabelFor(model => model.InventoryLocations) @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
+                                </div>
+                                <div class="col-xs-4">
+                                    @Html.LabelFor(model => model.Labels) @Html.DropDownListFor(model => model.ItemsModel[i].LabelId, Model.Labels[i]) 
+                                </div>
                             </div>
-                            <div class="col-md-3">
-                                @Html.LabelFor(model => model.Labels) @Html.DropDownListFor(model => model.ItemsModel[i].LabelId, Model.Labels[i])  @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                            <div class="row">
+                                <div class="col-xs-1">
+                                    @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                </div>
                             </div>
-                        </div>
-                        <div class="row"><div class="col-sm-1"></div> </div>
+                            <hr />
+                        }
+                        else
+                        {
+                            <div class="row">
+                                <div class="col-xs-5">
+                                    @Html.LabelFor(model => model.InventoryLocations) @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
+                                </div>
+                                <div class="col-xs-5">
+                                    @Html.LabelFor(model => model.Labels) @Html.DropDownListFor(model => model.ItemsModel[i].LabelId, Model.Labels[i])
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xs-1">
+                                    @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                </div>
+                            </div>
+                            <hr />
+                        }
+
                     }
                 }
                 else
@@ -62,10 +88,35 @@
                             @Html.HiddenFor(model => model.ItemsModel[i].BundleId)
                             @Html.HiddenFor(model => model.ItemsModel[i].CheckedInById)
                             @Html.HiddenFor(model => model.ItemsModel[i].CheckedOutById)
-                            @Html.LabelFor(model => model.InventoryLocations)
-                            @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
-                            @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
-                            <br />
+                            if (Request.Browser.IsMobileDevice)
+                            {
+                                <div class="row">
+                                    <div class="col-xs-5">
+                                        @Html.LabelFor(model => model.InventoryLocations)
+                                    </div>
+                                    <div class="col-xs-5">
+                                        @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                    </div>
+                                </div>
+                                <hr />
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        @Html.LabelFor(model => model.InventoryLocations)
+                                    </div>
+                                    <div class="col-md-4">
+                                        @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])@Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                    </div>
+                                </div>
+                                
+                            }
                         }
                     </div>
                 }

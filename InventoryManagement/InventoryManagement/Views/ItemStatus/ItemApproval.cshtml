@@ -2,10 +2,10 @@
 @{
     ViewBag.Title = "ItemApproval";
 }
-<h2>Items Checked In, Pending Administrator Approval</h2>
+<h4>Items Checked In, Pending Administrator Approval</h4>
 @if (Model.PendingApprovalItems.Count == 0)
 {
-    <h3>There are no Items pending approval</h3>
+    <h4>There are no Items pending approval</h4>
     @Html.ActionLink("Back", "Index")
 }
 else
@@ -15,51 +15,98 @@ using (Html.BeginForm("ApproveItems", "ItemStatus", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="row">
-        <div class="col-sm-1">
-            @Html.DisplayName("Name")
-        </div>
-        <div class="col-sm-1">
-            @Html.DisplayName("Label")
-        </div>
-        <div class="col-sm-1">
-            @Html.DisplayName("Location")
-        </div>
-        <div class="col-sm-1">
-            @Html.DisplayName("Out By")
-        </div>
-        <div class="col-sm-1">
-            @Html.DisplayName("In By")
-        </div>
-        <div class="col-sm-1">
-            @Html.DisplayName("Approve")
-        </div>
-    </div>
+        if (Request.Browser.IsMobileDevice)
+        {
+            <div class="row">
+                <div class="col-xs-2">
+                    @Html.DisplayName("Name")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Label")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Location")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("User")
+                </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Approve")
+                </div>
+            </div>
+            <hr />
+            for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
+            {
+                @Html.HiddenFor(model => model.PendingApprovalItems[i].ItemId)
+                <div class="row">
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].ItemType.ItemName)
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].Label.LabelName)
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].InventoryLocation.InventoryLocationName)
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBoxFor(model => model.ApproveCheckBoxes[i])
+                    </div>
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-1">
+                    @Html.DisplayName("Name")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Label")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Location")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Out By")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("In By")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Approve")
+                </div>
+            </div>
 
-    for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
-    {
-        @Html.HiddenFor(model => model.PendingApprovalItems[i].ItemId)
-        <div class="row">
-            <div class="col-sm-1">
-                @Html.DisplayFor(model => model.PendingApprovalItems[i].ItemType.ItemName)
-            </div>
-            <div class="col-sm-1">
-                @Html.DisplayFor(model => model.PendingApprovalItems[i].Label.LabelName)
-            </div>
-            <div class="col-sm-1">
-                @Html.DisplayFor(model => model.PendingApprovalItems[i].InventoryLocation.InventoryLocationName)
-            </div>
-            <div class="col-sm-1">
-                @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedOutById)
-            </div>
-            <div class="col-sm-1">
-                @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
-            </div>
-            <div class="col-sm-1">
-                @Html.CheckBoxFor(model => model.ApproveCheckBoxes[i])
-            </div>
-        </div>
-    }
+            for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
+            {
+                @Html.HiddenFor(model => model.PendingApprovalItems[i].ItemId)
+                <div class="row">
+                    <div class="col-sm-1">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].ItemType.ItemName)
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].Label.LabelName)
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].InventoryLocation.InventoryLocationName)
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedOutById)
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.CheckBoxFor(model => model.ApproveCheckBoxes[i])
+                    </div>
+                </div>
+            }
+        }
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Approve Selected" class="btn btn-default" />

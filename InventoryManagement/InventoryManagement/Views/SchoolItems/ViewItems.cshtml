@@ -5,12 +5,12 @@
 
 @if (Model.CheckedOutItems.Count == 0)
 {
-    <h4>Your School does not currently have any items checked out</h4>
+    <h4>Your School does not have any items checked out</h4>
     @Html.ActionLink("Back", "Index")
 }
 else
 {
-    <h3>Your Currently Checked Out Items</h3>
+    <h4>Items currently checked out</h4>
     <table class="table">
         <tr>
             <th>

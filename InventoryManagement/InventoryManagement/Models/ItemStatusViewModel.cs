@@ -39,5 +39,6 @@ namespace InventoryManagement.Models
     {
         public IList<Items> ItemsNotReturned { get; set; }
         public IList<bool> LostCheckBoxes { get; set; }
+        public IList<bool> ReturnedCheckboxes { get; set; }
     }
 }

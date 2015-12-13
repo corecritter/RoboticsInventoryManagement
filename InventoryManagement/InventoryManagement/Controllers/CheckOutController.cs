@@ -80,7 +80,7 @@ namespace InventoryManagement.Controllers
                 {
                     if (bundleItem.CheckedOutById != null)
                     {
-                        TempData["error"] = "Bundle Already Checked Out";
+                        TempData["error"] = "All or part of bundle currently checked out";
                         return RedirectToAction("Index");
                     }
                     if (itemTypesSelected.IndexOf(bundleItem.ItemType) == -1)
@@ -221,6 +221,7 @@ namespace InventoryManagement.Controllers
                 potentialItems = potentialItems.Where(item => item.CheckedInById == null);
                 potentialItems = potentialItems.Where(item => item.BundleId == null);
                 potentialItems = potentialItems.Where(item => item.CheckedOutSchoolId == null);
+                potentialItems = potentialItems.Where(item => item.InventoryLocationId != null);
                 if (currItemType.HasLabel) //Only filter by label if the Item Type has labels
                     potentialItems = potentialItems.Where(item => item.LabelId == selectedSchool.LabelId);
 
@@ -239,7 +240,7 @@ namespace InventoryManagement.Controllers
                 }
                 else
                 { //Not enough Items to match requested quantity
-                    TempData["error"] = "Not anough " + currItemType.ItemName + "s available";
+                    TempData["error"] = "Not enough " + currItemType.ItemName + "s available";
                     return RedirectToAction("Index");
                 }
                 currItemTypeIndex++;

@@ -3,32 +3,58 @@
     ViewBag.Title = "NoInventoryLocation";
 }
 
-<h2>NoInventoryLocation</h2>
+<h4>No Inventory Location</h4>
 @using (Html.BeginForm("SubmitInventoryLocations", "ItemStatus", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <div class="row">
-        <div class="col-sm-2">
-            @Html.DisplayName("Item Name")
-        </div>
-        <div class="col-sm-4">
-            @Html.DisplayName("Inventory Location")
-        </div>
-    </div>
-    for (int i = 0; i < Model.ItemsMissingLocation.Count; i++)
+    if (Request.Browser.IsMobileDevice)
     {
-        @Html.HiddenFor(model => model.ItemsMissingLocation[i].ItemId)
+        <div class="row">
+            <div class="col-xs-4">
+                @Html.DisplayName("Item Name")
+            </div>
+            <div class="col-xs-6">
+                @Html.DisplayName("Inventory Location")
+            </div>
+        </div>
+        for (int i = 0; i < Model.ItemsMissingLocation.Count; i++)
+        {
+            @Html.HiddenFor(model => model.ItemsMissingLocation[i].ItemId)
+            <div class="row">
+                <div class="col-xs-4">
+                    @Html.DisplayFor(model => model.ItemsMissingLocation[i].ItemType.ItemName)
+                </div>
+                <div class="col-xs-6">
+                    @Html.DropDownListFor(model => model.ItemsMissingLocation[i].InventoryLocationId, Model.InventoryLocations[i])
+                </div>
+            </div>
+        }
+    }
+    else
+    {
         <div class="row">
             <div class="col-sm-2">
-                @Html.DisplayFor(model => model.ItemsMissingLocation[i].ItemType.ItemName)
+                @Html.DisplayName("Item Name")
             </div>
             <div class="col-sm-4">
-                @Html.DropDownListFor(model => model.ItemsMissingLocation[i].InventoryLocationId, Model.InventoryLocations[i])
+                @Html.DisplayName("Inventory Location")
             </div>
         </div>
+        for (int i = 0; i < Model.ItemsMissingLocation.Count; i++)
+        {
+            @Html.HiddenFor(model => model.ItemsMissingLocation[i].ItemId)
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.DisplayFor(model => model.ItemsMissingLocation[i].ItemType.ItemName)
+                </div>
+                <div class="col-sm-4">
+                    @Html.DropDownListFor(model => model.ItemsMissingLocation[i].InventoryLocationId, Model.InventoryLocations[i])
+                </div>
+            </div>
+        }
     }
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Save" class="btn btn-default" />

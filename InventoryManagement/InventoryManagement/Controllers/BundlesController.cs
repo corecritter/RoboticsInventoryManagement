@@ -355,7 +355,7 @@ namespace InventoryManagement.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             if (!DeleteBundle(id))
-                TempData["error"] = "Something Went wrong";
+                TempData["error"] = "Something went wrong";
             return RedirectToAction("Index");
         }
         private bool DeleteBundle(int id)

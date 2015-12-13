@@ -3,7 +3,7 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Return these items to their inventory locations</h2>
+<h4>Return these items to their inventory locations</h4>
 @using (Html.BeginForm("ReturnItems", "InventoryReturn", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -14,43 +14,83 @@
     }
     else
     {
+        if (Request.Browser.IsMobileDevice)
+        {
         <div class="row">
-            <div class="col-sm-2">
-                @Html.DisplayName("Item Name")
+            <div class="col-xs-2">
+                @Html.DisplayName("Name")
             </div>
-            <div class="col-sm-2">
-                @Html.DisplayName("Inventory Location")
+            <div class="col-xs-2">
+                @Html.DisplayName("Location")
             </div>
-            <div class="col-sm-2">
+            <div class="col-xs-2">
                 @Html.DisplayName("Label")
             </div>
-            <div class="col-sm-2">
+            <div class="col-xs-2">
                 @Html.DisplayName("Returning")
             </div>
         </div>
-
+        <hr />
+            for (int i = 0; i < Model.ItemDisplayString.Count; i++)
+            {
+                @Html.HiddenFor(model => model.ItemReturnQuantities[i])
+                <div class="row">
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.ItemDisplayString[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.ItemDisplayInventoryLocation[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayFor(model => model.ItemDisplayLabelString[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBoxFor(model => model.ItemReturnCheckBoxes[i])
+                    </div>
+                </div>
+                <hr />
+            }
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.DisplayName("Item Name")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Inventory Location")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Label")
+                </div>
+                <div class="col-sm-2">
+                    @Html.DisplayName("Returning")
+                </div>
+            </div>
+            for (int i = 0; i < Model.ItemDisplayString.Count; i++)
+            {
+                @Html.HiddenFor(model => model.ItemReturnQuantities[i])
+                <div class="row">
+                    <div class="col-sm-2">
+                        @Html.DisplayFor(model => model.ItemDisplayString[i])
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.DisplayFor(model => model.ItemDisplayInventoryLocation[i])
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.DisplayFor(model => model.ItemDisplayLabelString[i])
+                    </div>
+                    <div class="col-sm-2">
+                        @Html.CheckBoxFor(model => model.ItemReturnCheckBoxes[i])
+                    </div>
+                </div>
+            }
+        }
         for (int i = 0; i < Model.ItemsToReturn.Count; i++)
         {
             @Html.HiddenFor(model => model.ItemsToReturn[i].ItemId)
         }
-        for (int i = 0; i < Model.ItemDisplayString.Count; i++)
-        {
-            @Html.HiddenFor(model => model.ItemReturnQuantities[i])
-            <div class="row">
-                <div class="col-sm-2">
-                    @Html.DisplayFor(model => model.ItemDisplayString[i])
-                </div>
-                <div class="col-sm-2">
-                    @Html.DisplayFor(model => model.ItemDisplayInventoryLocation[i])
-                </div>
-                <div class="col-sm-2">
-                    @Html.DisplayFor(model => model.ItemDisplayLabelString[i])
-                </div>
-                <div class="col-sm-2">
-                    @Html.CheckBoxFor(model => model.ItemReturnCheckBoxes[i])
-                </div>
-            </div>
-        }
+        
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Return Items" class="btn btn-default" />

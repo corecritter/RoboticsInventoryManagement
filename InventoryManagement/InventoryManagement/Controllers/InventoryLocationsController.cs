@@ -19,6 +19,8 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            if (TempData["error"] != null)
+                ModelState.AddModelError("", (string)TempData["error"]);
             return View(db.InventoryLocations.OrderBy(locxation => locxation.InventoryLocationName).ToList());
         }
 
@@ -125,8 +127,33 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
-            InventoryLocations inventoryLocations = db.InventoryLocations.Find(id);
-            db.InventoryLocations.Remove(inventoryLocations);
+            InventoryLocations inventoryLocation = db.InventoryLocations.Find(id);
+            if (inventoryLocation == null)
+            {
+                TempData["error"] = "Could not find inventory location";
+                return RedirectToAction("Index");
+            }
+            var associatedItems = db.Items.Where(item => item.InventoryLocationId == id);
+            var rentedItems = associatedItems.Where(item => item.CheckedOutSchoolId != null);
+            if(rentedItems.ToList().Count != 0)
+            {
+                TempData["error"] = "There are items rented out using the selected inventory location, cannot continue.";
+                return RedirectToAction("Index");
+            }
+            var removeInvLocItems = associatedItems.ToList();
+            for(int i=0; i< removeInvLocItems.Count; i++)
+            {
+                var item = db.Items.Find(removeInvLocItems[i].ItemId);
+                if (item == null)
+                {
+                    TempData["error"] = "Could not find item, cannot continue";
+                    return RedirectToAction("Index");
+                }
+                item.InventoryLocationId = null;
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            db.InventoryLocations.Remove(inventoryLocation);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

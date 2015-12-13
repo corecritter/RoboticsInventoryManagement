@@ -4,7 +4,7 @@
     ViewBag.Title = "ItemTypesSubmit";
 }
 
-<h2>Select Item Types</h2>
+<h4>Select Item Types</h4>
 @using (Html.BeginForm("ItemTypesSubmit", "Bundles", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
@@ -13,7 +13,25 @@
         for (int i = 0; i < Model.SelectedSchoolIds.Count; i++)
         {
             @Html.HiddenFor(model => model.SelectedSchoolIds[i])
+    }
+    if (Request.Browser.IsMobileDevice)
+    {
+        for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
+        {
+            @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
+            @Html.HiddenFor(model => model.ItemTypes[i].ItemName)
+            <div class="row">
+                <div class="col-xs-4">
+                    @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
+                </div>
+                <div class="col-xs-4">
+                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
+                </div>
+            </div>
         }
+    }
+    else
+    {
         for (int i = 0; i < Model.ItemTypesCheckboxes.Count; i++)
         {
             @Html.HiddenFor(model => model.ItemTypes[i].ItemTypeId)
@@ -23,10 +41,12 @@
                     @Html.DisplayFor(model => Model.ItemTypes[i].ItemName)
                 </div>
                 <div class="col-sm-4">
-                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i], htmlAttributes: new { @class = "form-control" })
+                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
                 </div>
             </div>
         }
+    }
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Continue" class="btn btn-default" />

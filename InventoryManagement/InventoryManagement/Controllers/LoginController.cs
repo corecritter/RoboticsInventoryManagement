@@ -30,7 +30,6 @@ namespace InventoryManagement.Controllers
             {
                 ModelState.AddModelError("", "Invalid login attempt.");
                 return View("Index",use);
-
             }
             return AfterLogin();
         }

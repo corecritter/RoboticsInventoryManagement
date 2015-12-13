@@ -155,7 +155,7 @@ namespace InventoryManagement.Controllers
                 var item = db.Items.Find(associatedItemsOut[i].ItemId);
                 if(item==null)
                     return RedirectToAction("Index");
-                item.CheckedOutById = null;
+                item.CheckedOutById = "Removed";
                 db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
             }
@@ -164,8 +164,7 @@ namespace InventoryManagement.Controllers
                 var item = db.Items.Find(associatedItemsIn[i].ItemId);
                 if (item == null)
                     return RedirectToAction("Index");
-                item.IsReturned = false;
-                item.CheckedInById = null;
+                item.CheckedInById = "Removed";
                 db.Entry(item).State = EntityState.Modified;
                 db.SaveChanges();
             }

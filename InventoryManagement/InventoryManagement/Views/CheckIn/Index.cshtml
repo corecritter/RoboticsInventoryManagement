@@ -3,12 +3,37 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Check In</h2>
+<h4>Select items to check in</h4>
 @using (Html.BeginForm("ItemTypesSubmit", "CheckIn", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => model.SelectedSchoolId)
+    if (Request.Browser.IsMobileDevice)
+    {
+        <div class="row">
+            <div class="col-xs-4">
+                @Html.DisplayName("Item Name")
+            </div>
+            <div class="col-xs-4">
+                @Html.DisplayName("Check In")
+            </div>
+        </div>
+        for (int i = 0; i < Model.ItemTypesModel.Count; i++)
+        {
+            @Html.HiddenFor(model => model.ItemTypesModel[i].ItemTypeId)
+            <div class="row">
+                <div class="col-xs-4">
+                    @Html.DisplayFor(model => model.ItemTypesModel[i].ItemName)
+                </div>
+                <div class="col-xs-4">
+                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
+                </div>
+            </div>
+        }
+    }
+    else
+    {
     <div class="row">
         <div class="col-sm-2"> 
             @Html.DisplayName("Item Name")
@@ -29,6 +54,8 @@
                 </div>
             </div>
         }
+    }
+
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Continue" class="btn btn-default" />

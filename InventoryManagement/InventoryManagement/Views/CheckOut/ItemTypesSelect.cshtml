@@ -3,30 +3,61 @@
     ViewBag.Title = "ItemTypesSelect";
 }
 
-<h2>ItemTypesSelect</h2>
+<h4>Select Item Types</h4>
 @using (Html.BeginForm("ItemTypesSubmit", "CheckOut", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.HiddenFor(model => Model.SelectedBundleId)
     @Html.HiddenFor(model => model.SelectedSchoolId)
+    if (Request.Browser.IsMobileDevice)
+    {
     <div class="row">
-        <div class="col-sm-2"> @Html.DisplayName("Item Name")</div>
-        <div class="col-sm-4">
+        <div class="col-xs-4"> 
+            @Html.DisplayName("Item Name")
+        </div>
+        <div class="col-xs-4">
             @Html.DisplayName("Check Out")
         </div>
     </div>
-    for (int i = 0; i < Model.ItemTypesModel.Count; i++)
+    <hr />
+    }
+    else
     {
         <div class="row">
-            <div class="col-sm-2"> 
+            <div class="col-sm-2"> @Html.DisplayName("Item Name")</div>
+            <div class="col-sm-4">
+                @Html.DisplayName("Check Out")
+            </div>
+        </div>
+    }
+    for (int i = 0; i < Model.ItemTypesModel.Count; i++)
+    {
+        if (Request.Browser.IsMobileDevice)
+        {
+        <div class="row">
+            <div class="col-xs-4"> 
                 @Html.HiddenFor(model => Model.ItemTypesModel[i].ItemTypeId)
                 @Html.DisplayFor(model => Model.ItemTypesModel[i].ItemName)
             </div>
-            <div class="col-sm-4">
+            <div class="col-xs-4">
                 @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
             </div>
         </div>
+        <hr />
+        }
+        else
+        {
+            <div class="row">
+                <div class="col-sm-2">
+                    @Html.HiddenFor(model => Model.ItemTypesModel[i].ItemTypeId)
+                    @Html.DisplayFor(model => Model.ItemTypesModel[i].ItemName)
+                </div>
+                <div class="col-sm-4">
+                    @Html.CheckBoxFor(model => model.ItemTypesCheckboxes[i])
+                </div>
+            </div>
+        }
     }
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">

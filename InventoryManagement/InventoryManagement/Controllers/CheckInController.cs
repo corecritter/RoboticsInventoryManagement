@@ -23,13 +23,13 @@ namespace InventoryManagement.Controllers
             var school = db.Schools.Find(id);
             if (school == null)
             {
-                TempData["error"] = "Cannot Find Selected Shool";
+                TempData["error"] = "Cannot find selected school";
                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
             }
             var rentedItems = getRentedItems(result);
             if(rentedItems.Count == 0)
             {
-                TempData["error"] = "Selected School Does not currently have items to be checked in";
+                TempData["error"] = "Selected School does not have items to be checked in";
                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
             }
             IList<ItemTypes> rentedItemTypes = new List<ItemTypes>();
@@ -139,6 +139,11 @@ namespace InventoryManagement.Controllers
                                 return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
                             itemsToReturn.Add(item);
                         }
+                    }
+                    else
+                    {
+                        TempData["error"] = "Entered quantity is greater than number of items checked out";
+                        return RedirectToAction("Index", new { Controller = "CheckOut", Action = "Index" });
                     }
                 }
                 index++;

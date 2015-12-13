@@ -10,5 +10,6 @@ namespace InventoryManagement.Database
     public class InventoryContext : DbContext
     {
         public DbSet<InventoryLocations> InventoryLocations { get; set; }
+        public DbSet<Items> Items { get; set; }
     }
 }

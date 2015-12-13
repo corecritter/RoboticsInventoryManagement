@@ -10,7 +10,7 @@ namespace InventoryManagement.Models
 {
     public class BundlesViewModel
     {
-        [Required(ErrorMessage = "A Bundle Name is required")]
+        [Required(ErrorMessage = "A Bundle Name is required"), Display(Name = "Bundle Name")]
         public string BundleName { get; set; }
 
         public List<Schools> Schools { get; set; }

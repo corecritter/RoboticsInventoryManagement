@@ -19,6 +19,10 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            if(TempData["error"]!=null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
             return View(db.Labels.OrderBy(label => label.LabelName).ToList());
         }
 
@@ -129,6 +133,40 @@ namespace InventoryManagement.Controllers
             if (labels == null)
                 return RedirectToAction("Index");
             var associatedSchools = db.Schools.Where(school => school.LabelId == id).ToList();
+            var associatedItems = db.Items.Where(item => item.LabelId == id);
+            var checkedOutItems = associatedItems.Where(item => item.CheckedOutSchoolId != null).ToList();
+            if (associatedSchools.Count != 0)
+            {
+                TempData["error"] = "Remove all associated schools before deleting";
+                return RedirectToAction("Index");
+            }
+            if (checkedOutItems.Count != 0)
+            {
+                TempData["error"] = "There are currently items in a checked out state using the current label";
+                return RedirectToAction("Index");
+            }
+
+            var removeLabelItems = associatedItems.ToList();
+            for(int i=0; i< removeLabelItems.Count; i++)
+            {
+                var item = db.Items.Find(removeLabelItems[i].Label.LabelId);
+                if (item == null)
+                {
+                    TempData["error"] = "An item was not found, cannot continue";
+                    return RedirectToAction("Index");
+                }
+                item.LabelId = null;
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
+            }
+            db.Labels.Remove(labels);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+            /*
+            Labels labels = db.Labels.Find(id);
+            if (labels == null)
+                return RedirectToAction("Index");
+            var associatedSchools = db.Schools.Where(school => school.LabelId == id).ToList();
             var associatedItems = db.Items.Where(item => item.LabelId == id).ToList();
             var relatedBundles = db.Bundles.Where(bundle => bundle.SchoolId == id).ToList();
             for(int i=0; i< associatedSchools.Count; i++)
@@ -179,6 +217,7 @@ namespace InventoryManagement.Controllers
             db.Labels.Remove(labels);
             db.SaveChanges();
             return RedirectToAction("Index");
+            */
         }
 
         protected override void Dispose(bool disposing)

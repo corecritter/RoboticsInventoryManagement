@@ -5,27 +5,27 @@
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <tr>
         <td>
-            @Html.ActionLink("Items Missing a Label", "NoLabel")
+            @Html.ActionLink("View all items without a label", "NoLabel")
         </td>
     </tr>
     <tr>
         <td>
-            @Html.ActionLink("Items Missing an Inventory Location", "NoInventoryLocation")
+            @Html.ActionLink("View items missing an inventory location", "NoInventoryLocation")
         </td>
     </tr>
     <tr>
         <td>
-            @Html.ActionLink("Items Checked Out", "ItemsOut")
+            @Html.ActionLink("View items checked out", "ItemsOut")
         </td>
     </tr>
     <tr>
         <td>
-            @Html.ActionLink("Items Checked In and not returned", "NotReturned")
+            @Html.ActionLink("View items checked in and not returned", "NotReturned")
         </td>
     </tr>
     <tr>
         <td>
-            @Html.ActionLink("Items Pending Approval", "ItemApproval")
+            @Html.ActionLink("View items pending approval", "ItemApproval")
         </td>
     </tr>
     
