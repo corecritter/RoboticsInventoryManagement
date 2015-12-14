@@ -28,12 +28,16 @@ else
                         @Html.DisplayName("User")
                     </div>
                     <div class="col-xs-2">
-                        @Html.DisplayName("Remove")
+                        @Html.DisplayName("Lost")
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.DisplayName("Return")
                     </div>
                 </div>
+                <hr />
 
-                for (int i = 0; i < Model.ItemsNotReturned.Count; i++)
-                {
+            for (int i = 0; i < Model.ItemsNotReturned.Count; i++)
+            {
                     @Html.HiddenFor(model => model.ItemsNotReturned[i].ItemId)
                     <div class="row">
                         <div class="col-xs-2">
@@ -46,9 +50,13 @@ else
                             @Html.DisplayFor(model => model.ItemsNotReturned[i].CheckedInById)
                         </div>
                         <div class="col-xs-2">
-                            @Html.CheckBoxFor(model => model.LostCheckBoxes[i])
+                            @Html.CheckBoxFor(model => model.ItemsLost[i])
+                        </div>
+                        <div class="col-xs-2">
+                            @Html.CheckBoxFor(model => model.ItemReturn[i])
                         </div>
                     </div>
+                    <hr />
             }
         }
         else
@@ -70,9 +78,13 @@ else
                     @Html.DisplayName("In By")
                 </div>
                 <div class="col-sm-1">
-                    @Html.DisplayName("Remove")
+                    @Html.DisplayName("Lost")
+                </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Return")
                 </div>
             </div>
+            <hr />
 
             for (int i = 0; i < Model.ItemsNotReturned.Count; i++)
             {
@@ -94,14 +106,18 @@ else
                         @Html.DisplayFor(model => model.ItemsNotReturned[i].CheckedInById)
                     </div>
                     <div class="col-sm-1">
-                        @Html.CheckBoxFor(model => model.LostCheckBoxes[i])
+                        @Html.CheckBoxFor(model => model.ItemsLost[i])
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.CheckBoxFor(model => model.ItemReturn[i])
                     </div>
                 </div>
+                <hr />
             }
         }
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Remove Selected" class="btn btn-default" />
+                <input type="submit" value="Update Selected" class="btn btn-default" />
             </div>
         </div>
     }

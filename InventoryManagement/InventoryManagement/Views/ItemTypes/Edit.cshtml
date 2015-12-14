@@ -29,6 +29,7 @@
                 @Html.ActionLink("Add Item", "AddItem", new { itemTypeId = Model.ItemTypeModel.ItemTypeId })
             </div>
         </div>
+        <hr />
                 @if (Model.ItemTypeModel.HasLabel)
                 {
 
@@ -108,14 +109,19 @@
                             else
                             {
                                 <div class="row">
-                                    <div class="col-md-2">
+                                    <div class="col-xs-3">
                                         @Html.LabelFor(model => model.InventoryLocations)
                                     </div>
-                                    <div class="col-md-4">
-                                        @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])@Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                    <div class="col-xs-5">
+                                        @Html.DropDownListFor(model => model.ItemsModel[i].InventoryLocationId, Model.InventoryLocations[i])
                                     </div>
                                 </div>
-                                
+                                <div class="row">
+                                    <div class="col-xs-1">
+                                        @Html.ActionLink("Delete", "DeleteItem", new { itemId = Model.ItemsModel[i].ItemId })
+                                    </div>
+                                </div>
+                                <hr />
                             }
                         }
                     </div>

@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using InventoryManagement.Models;
 using System.Data.Entity;
+using System.Web.UI.WebControls;
 
 namespace InventoryManagement.Controllers
 {
@@ -143,6 +144,16 @@ namespace InventoryManagement.Controllers
                 TempData["error"] = "No items are currently checked out";
                 return RedirectToAction("Index");
             }
+
+
+            IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
+            {
+                Text = x.InventoryLocationName,
+                Value = x.InventoryLocationId.ToString()
+            }).OrderBy(listItem => listItem.Text).ToList();
+
+
+
             IList<bool> lostItems = new List<bool>();
             IList<bool> returnedItems = new List<bool>();
             IList<string> schoolDisplayStrings = new List<string>();
@@ -167,27 +178,26 @@ namespace InventoryManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult RemoveItems(ItemsOutViewModel vm)
+        public ActionResult ItemsOut(ItemsOutViewModel vm)
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
-            if (vm == null)
+            if (vm == null || vm.ItemsLost == null || vm.ItemReturn == null)
                 return RedirectToAction("Index");
-            int index = 0;
-            foreach(bool isChecked in vm.ItemsLost)
+
+            if(!CheckReturnedAndLost(vm.CheckedOutItems, vm.ItemsLost, vm.ItemReturn))
             {
-                if (isChecked)
-                {
-                    var itemToRemove = db.Items.Find(vm.CheckedOutItems[index].ItemId);
-                    if (itemToRemove == null)
-                        return RedirectToAction("Index");
-                    db.Items.Remove(itemToRemove);
-                    db.SaveChanges();
-                }
-                index++;
+                TempData["error"] = "An item cannot be marked as lost and returned";
+                return RedirectToAction("Index");
+            }
+            if(!UpdateItems(vm.CheckedOutItems, vm.ItemsLost, vm.ItemReturn))
+            {
+                TempData["error"] = "Item not found, cannot continue";
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
+        
         public ActionResult NotReturned()
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
@@ -202,14 +212,17 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index");
             }
             IList<bool> lostItem = new List<bool>();
-            for(int i=0; i< notReturnedItems.Count; i++)
+            IList<bool> returnedItems = new List<bool>();
+            for (int i=0; i< notReturnedItems.Count; i++)
             {
                 lostItem.Add(false);
+                returnedItems.Add(false);
             }
             ItemsNotReturnedViewModel vm = new ItemsNotReturnedViewModel
             {
                 ItemsNotReturned = notReturnedItems,
-                LostCheckBoxes = lostItem
+                ItemsLost = lostItem,
+                ItemReturn = returnedItems
             };
             return View(vm);
         }
@@ -220,20 +233,17 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
-            if (vm == null || vm.LostCheckBoxes == null)
+            if (vm == null || vm.ItemsLost == null || vm.ItemReturn == null)
                 return RedirectToAction("Index");
-            int index = 0;
-            foreach (bool isChecked in vm.LostCheckBoxes)
+            if (!CheckReturnedAndLost(vm.ItemsNotReturned, vm.ItemsLost, vm.ItemReturn))
             {
-                if (isChecked)
-                {
-                    var itemToRemove = db.Items.Find(vm.ItemsNotReturned[index].ItemId);
-                    if (itemToRemove == null)
-                        return RedirectToAction("Index");
-                    db.Items.Remove(itemToRemove);
-                    db.SaveChanges();
-                }
-                index++;
+                TempData["error"] = "An item cannot be marked as lost and returned";
+                return RedirectToAction("Index");
+            }
+            if (!UpdateItems(vm.ItemsNotReturned, vm.ItemsLost, vm.ItemReturn))
+            {
+                TempData["error"] = "Item not found, cannot continue";
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Index");
         }
@@ -250,13 +260,19 @@ namespace InventoryManagement.Controllers
                 TempData["error"] = "No items currently pending approval";
                 return RedirectToAction("Index");
             }
-            IList<bool> approveItems = new List<bool>();
+            IList<bool> itemsLost = new List<bool>();
+            IList<bool> itemReturn = new List<bool>();
+
             foreach (var item in pendingApprovalItems)
-                approveItems.Add(true);
+            {
+                itemReturn.Add(true);
+                itemsLost.Add(false);
+            }
             ItemsApproveViewModel vm = new ItemsApproveViewModel
             {
-                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.ItemType.ItemName).ThenBy(item => item.Label!=null? item.Label.LabelName : "").ToList(),
-                ApproveCheckBoxes = approveItems
+                PendingApprovalItems = pendingApprovalItems.OrderBy(item => item.InventoryLocation.InventoryLocationName).ThenBy(item => item.ItemType.ItemName).ThenBy(item => item.Label!=null? item.Label.LabelName : "").ToList(),
+                ItemReturn = itemReturn,
+                ItemsLost = itemsLost
             };
             return View(vm);
         }
@@ -269,24 +285,73 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (vm == null)
                 return RedirectToAction("Index");
+
+            if (!CheckReturnedAndLost(vm.PendingApprovalItems, vm.ItemsLost, vm.ItemReturn))
+            {
+                TempData["error"] = "An item cannot be marked as lost and returned";
+                return RedirectToAction("Index");
+            }
+            if (!UpdateItems(vm.PendingApprovalItems, vm.ItemsLost, vm.ItemReturn))
+            {
+                TempData["error"] = "Item not found, cannot continue";
+                return RedirectToAction("Index");
+            }
+            return RedirectToAction("Index");
+        }
+
+        private bool CheckReturnedAndLost(IList<Items> ItemIds, IList<bool> lost, IList<bool> returned)
+        {
             int index = 0;
-            foreach (bool isChecked in vm.ApproveCheckBoxes)
+            foreach (bool isChecked in lost)
+            {
+                if (isChecked && returned[index])
+                    return false;
+                index++;
+            }
+            return true;
+        }
+        private bool UpdateItems(IList<Items> ItemIds, IList<bool> lost, IList<bool> returned)
+        {
+            int index = 0;
+            foreach (bool isChecked in lost)
             {
                 if (isChecked)
                 {
-                    var itemToApprove = db.Items.Find(vm.PendingApprovalItems[index].ItemId);
-                    if (itemToApprove == null)
-                        return RedirectToAction("Index");
-                    itemToApprove.CheckedOutById = null;
-                    itemToApprove.CheckedInById = null;
-                    itemToApprove.CheckedOutSchoolId = null;
-                    itemToApprove.IsReturned = false;
-                    db.Entry(itemToApprove).State = EntityState.Modified;
+                    var itemToRemove = db.Items.Find(ItemIds[index].ItemId);
+                    if (itemToRemove == null)
+                        return false;
+                    db.Items.Remove(itemToRemove);
                     db.SaveChanges();
                 }
                 index++;
             }
-            return RedirectToAction("Index");
+            index = 0;
+            foreach (bool isChecked in returned)
+            {
+                if (isChecked)
+                {
+                    var itemToReturn = db.Items.Find(ItemIds[index].ItemId);
+                    if (itemToReturn == null)
+                        return false;
+                    itemToReturn.CheckedInById = null;
+                    itemToReturn.CheckedOutById = null;
+                    itemToReturn.CheckedOutSchoolId = null;
+                    itemToReturn.IsReturned = false;
+                    db.Entry(itemToReturn).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                index++;
+            }
+            return true;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

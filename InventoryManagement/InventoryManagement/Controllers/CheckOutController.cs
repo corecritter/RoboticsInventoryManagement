@@ -270,18 +270,28 @@ namespace InventoryManagement.Controllers
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             if (Session["LoggedUserID"] == null || vm == null)
                 return RedirectToAction("Index");
-
+            IList<Items> tocheckout = new List<Items>();
             string userName = (string)Session["LoggedUserID"];
             foreach (var item in vm.ItemsToCheckOut)
             {
                 var dbItem = db.Items.Find(item.ItemId);
                 if (dbItem != null && dbItem.CheckedOutById == null && dbItem.CheckedInById == null && dbItem.CheckedOutSchoolId == null)
                 {
-                    dbItem.CheckedOutById = userName;
-                    dbItem.CheckedOutSchoolId = vm.SelectedSchoolId;
-                    db.Entry(dbItem).State = EntityState.Modified;
-                    db.SaveChanges();
+                    tocheckout.Add(dbItem);
                 }
+                else
+                {
+                    TempData["error"] = "An item selected has already been checked out. Please try again";
+                    return RedirectToAction("Index");
+                }
+
+            }
+            foreach(var item in tocheckout)
+            {
+                item.CheckedOutById = userName;
+                item.CheckedOutSchoolId = vm.SelectedSchoolId;
+                db.Entry(item).State = EntityState.Modified;
+                db.SaveChanges();
             }
             return RedirectToAction("Index");
         }

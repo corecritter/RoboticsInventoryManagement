@@ -145,7 +145,8 @@ namespace InventoryManagement.Controllers
             {
                 return HttpNotFound();
             }
-            var itemsModel = itemTypes.Item.Where(item => item.CheckedOutSchoolId==null).OrderBy(item =>  item.InventoryLocation != null ? item.InventoryLocation.InventoryLocationName : "").ThenBy(item => item.Label !=null ? item.Label.LabelName : "").ToList();
+            var availableToEdit = itemTypes.Item.Where(item => item.BundleId == null);
+            var itemsModel = availableToEdit.Where(item => item.CheckedOutSchoolId==null).OrderBy(item =>  item.InventoryLocation != null ? item.InventoryLocation.InventoryLocationName : "").ThenBy(item => item.Label !=null ? item.Label.LabelName : "").ToList();
             //Create List of Inventory Locations
             IList<SelectListItem> inventoryLocations = db.InventoryLocations.Select(x => new SelectListItem
             {

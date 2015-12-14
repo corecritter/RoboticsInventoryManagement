@@ -20,6 +20,10 @@ namespace InventoryManagement.Controllers
         {
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
+            if (TempData["error"] != null)
+            {
+                ModelState.AddModelError("", (string)TempData["error"]);
+            }
             return View(db.Schools.ToList().OrderBy(x => x.SchoolName));
         }
 
@@ -171,6 +175,22 @@ namespace InventoryManagement.Controllers
             if (Session["isAdmin"] == null || !(bool)Session["isAdmin"])
                 return RedirectToAction("Index", new { controller = "Home", action = "Index" });
             Schools schools = db.Schools.Find(id);
+            if (schools == null)
+            {
+                return RedirectToAction("Index");
+            }
+            var associatedItems = db.Items.Where(item => item.CheckedOutSchoolId == id);
+            if (associatedItems.ToList().Count != 0)
+            {
+                TempData["error"] = "School has items checked out. Resolve before continuing";
+                return RedirectToAction("Index");
+            }
+            var associatedBundles = db.Bundles.Where(bundle => bundle.SchoolId == id).ToList();
+            if (associatedBundles.Count != 0)
+            {
+                TempData["error"] = "Remove all associated bundles before deleting";
+                return RedirectToAction("Index");
+            }
             db.Schools.Remove(schools);
             db.SaveChanges();
             return RedirectToAction("Index");

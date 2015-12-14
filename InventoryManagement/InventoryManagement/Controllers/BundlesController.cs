@@ -201,7 +201,7 @@ namespace InventoryManagement.Controllers
             List<Bundles> tempBundle = new List<Bundles>(); //Temporarily hold new bundles
             IList<Items> tempItems = new List<Items>();    //Temporarily hold new items
             int numSchools = vm.SelectedSchoolIds.Count;
-
+            string itemTypeName = "";
             //Create the Bundles
             //For Every Selected School
             foreach (int schoolId in vm.SelectedSchoolIds)
@@ -239,6 +239,7 @@ namespace InventoryManagement.Controllers
                     //Stop The Process
                     else
                     {
+                        itemTypeName = itemType.ItemName;
                         canCreate = false; //Not enough items to match demand
                         break;
                     }
@@ -252,7 +253,7 @@ namespace InventoryManagement.Controllers
                 }
                 else
                 {
-                    TempData["error"] = "Not enough items available to meet demand";
+                    TempData["error"] = "Not enough " + itemTypeName +"s available to meet demand";
                     return RedirectToAction("Index");
                 }
             }

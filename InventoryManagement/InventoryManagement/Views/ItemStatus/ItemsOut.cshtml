@@ -11,7 +11,7 @@
 }
 else
 {
-    using (Html.BeginForm("RemoveItems", "ItemStatus", FormMethod.Post))
+    using (Html.BeginForm("ItemsOut", "ItemStatus", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -31,6 +31,7 @@ else
                     @Html.DisplayName("Return")
                 </div>
             </div>
+            <hr />
             for (int i = 0; i < Model.CheckedOutItems.Count; i++)
             {
                 @Html.HiddenFor(model => model.CheckedOutItems[i].ItemId)
@@ -48,6 +49,7 @@ else
                         @Html.CheckBoxFor(model => model.ItemReturn[i])
                     </div>
                 </div>
+                <hr />
             }
         }
         else
@@ -69,6 +71,7 @@ else
                     @Html.DisplayName("Returned")
                 </div>
             </div>
+            <hr />
             for (int i = 0; i < Model.CheckedOutItems.Count; i++)
             {
                 @Html.HiddenFor(model => model.CheckedOutItems[i].ItemId)
@@ -86,6 +89,7 @@ else
                             @Html.DisplayName("(No Label)")
                         }
                     </div>
+                    
                     <div class="col-sm-2">
                         @Html.DisplayFor(model => model.SchoolDisplayStrings[i])
                     </div>
@@ -96,6 +100,7 @@ else
                         @Html.CheckBoxFor(model => model.ItemReturn[i])
                     </div>
                 </div>
+                <hr />
             }
         }
 

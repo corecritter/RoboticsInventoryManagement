@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 namespace InventoryManagement.Models
 {
@@ -22,7 +23,8 @@ namespace InventoryManagement.Models
     public class ItemsApproveViewModel
     {
         public IList<Items> PendingApprovalItems { get; set; }
-        public IList<bool> ApproveCheckBoxes { get; set; }
+        public IList<bool> ItemReturn { get; set; }
+        public IList<bool> ItemsLost { get; set; }
     }
     public class ItemsMissingLabelViewModel
     {
@@ -38,7 +40,7 @@ namespace InventoryManagement.Models
     public class ItemsNotReturnedViewModel
     {
         public IList<Items> ItemsNotReturned { get; set; }
-        public IList<bool> LostCheckBoxes { get; set; }
-        public IList<bool> ReturnedCheckboxes { get; set; }
+        public IList<bool> ItemsLost { get; set; }
+        public IList<bool> ItemReturn { get; set; }
     }
 }

@@ -11,5 +11,7 @@ namespace InventoryManagement.Database
         public DbSet<Schools> Schools { get; set; }
         public DbSet<Labels> Labels { get; set; }
         public DbSet<InventoryLocations> InventoryLocations { get; set; }
+        public DbSet<Bundles> Bundles { get; set; }
+        public DbSet<Items> Items { get; set; }
     }
 }

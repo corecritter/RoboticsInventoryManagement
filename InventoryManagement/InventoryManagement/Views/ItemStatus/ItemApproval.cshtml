@@ -33,6 +33,9 @@ using (Html.BeginForm("ApproveItems", "ItemStatus", FormMethod.Post))
                 <div class="col-xs-2">
                     @Html.DisplayName("Approve")
                 </div>
+                <div class="col-xs-2">
+                    @Html.DisplayName("Lost")
+                </div>
             </div>
             <hr />
             for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
@@ -52,7 +55,10 @@ using (Html.BeginForm("ApproveItems", "ItemStatus", FormMethod.Post))
                         @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
                     </div>
                     <div class="col-xs-2">
-                        @Html.CheckBoxFor(model => model.ApproveCheckBoxes[i])
+                        @Html.CheckBoxFor(model => model.ItemReturn[i])
+                    </div>
+                    <div class="col-xs-2">
+                        @Html.CheckBoxFor(model => model.ItemsLost[i])
                     </div>
                 </div>
                 <hr />
@@ -79,7 +85,11 @@ using (Html.BeginForm("ApproveItems", "ItemStatus", FormMethod.Post))
                 <div class="col-sm-1">
                     @Html.DisplayName("Approve")
                 </div>
+                <div class="col-sm-1">
+                    @Html.DisplayName("Lost")
+                </div>
             </div>
+            <hr />
 
             for (int i = 0; i < Model.PendingApprovalItems.Count; i++)
             {
@@ -101,15 +111,19 @@ using (Html.BeginForm("ApproveItems", "ItemStatus", FormMethod.Post))
                         @Html.DisplayFor(model => model.PendingApprovalItems[i].CheckedInById)
                     </div>
                     <div class="col-sm-1">
-                        @Html.CheckBoxFor(model => model.ApproveCheckBoxes[i])
+                        @Html.CheckBoxFor(model => model.ItemReturn[i])
+                    </div>
+                    <div class="col-sm-1">
+                        @Html.CheckBoxFor(model => model.ItemsLost[i])
                     </div>
                 </div>
+                <hr />
             }
         }
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" value="Approve Selected" class="btn btn-default" />
+            <input type="submit" value="Update Selected" class="btn btn-default" />
         </div>
     </div>
 }
